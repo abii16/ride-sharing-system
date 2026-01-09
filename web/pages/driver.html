@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare Driver Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/driver.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">🚕<span>RideShare Driver</span></div>
+        <div class="nav-user" id="navUser" style="display:none">
+            <div class="avatar-small">👤</div>
+            <span id="navUsername">Driver</span>
+            <button onclick="logout()" style="background:none; border:none; color:#ff6b6b; cursor:pointer; margin-left:10px; font-weight:600;">Logout</button>
+        </div>
+    </nav>
+
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modalTitle">Driver Portal</h2>
+            
+            <div id="loginForm">
+                <input type="text" class="input-box" id="username" placeholder="Username">
+                <input type="password" class="input-box" id="password" placeholder="Password">
+                <button class="btn-blue" onclick="login()">Log In</button>
+                <p style="margin-top:1rem;font-size:0.9rem"><a href="driver_register.html">Register as new driver</a></p>
+            </div>
+
+            <div id="registerForm" style="display:none">
+                <input type="text" class="input-box" id="regUser" placeholder="Username">
+                <input type="password" class="input-box" id="regPass" placeholder="Password">
+                <input type="text" class="input-box" id="regModel" placeholder="Vehicle Model (e.g. Toyota Vitz)">
+                <input type="text" class="input-box" id="regPlate" placeholder="License Plate">
+                <button class="btn-blue" onclick="register()">Submit Application</button>
+                <p style="margin-top:1rem;font-size:0.9rem"><a href="#" onclick="showLogin()">Back to Login</a></p>
+            </div>
+            
+            <div id="msgBox" style="margin-top:10px; color: red; font-size: 0.9rem;"></div>
+        </div>
+    </div>
+
+    <div class="container" id="dashboard" style="display:none">
+        
+        <div>
+            
+            <div class="card">
+                <div class="profile-header">
+                    <div class="profile-avatar"></div>
+                    <div>
+                        <div style="font-weight:bold; font-size:1.1rem" id="dashName">Abel Driver</div>
+                        <div style="color:#777; font-size:0.85rem" id="dashEmail">abel@rideshare.com</div>
+                        <div class="rating" id="dashRating">★ 4.8</div>
+                    </div>
+                </div>
+                
+                <div class="status-toggle" id="statusBox">
+                    <span id="statusText">You are Offline</span>
+                    <label class="switch">
+                        <input type="checkbox" id="onlineToggle" onchange="toggleOnline()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <button class="btn-blue">Edit Profile</button>
+            </div>
+
+            
+            <div class="card">
+                <h3>Vehicle Details</h3>
+                <div class="info-row">
+                    <span class="label">Vehicle</span>
+                    <span class="value" id="dashModel">Tesla Model 3</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Color</span>
+                    <span class="value">White</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">License Plate</span>
+                    <span class="value" id="dashPlate">ABC-123</span>
+                </div>
+                <button class="btn-outline">Update Details</button>
+            </div>
+        </div>
+
+        
+        <div>
+            
+            <div class="card map-card">
+                <div class="address-bar">
+                    <span style="color:var(--primary)">📍</span> 
+                    <span id="locationText">Locating GPS...</span>
+                </div>
+                <div id="map"></div>
+            </div>
+
+            
+            <div class="card">
+                <h3>Earnings Overview</h3>
+                <div class="earnings-grid">
+                    <div class="earn-card highlight">
+                        <div class="earn-label" style="color:rgba(255,255,255,0.8)">Today</div>
+                        <div class="earn-val">0.0ETB</div>
+                    </div>
+                    <div class="earn-card">
+                        <div class="earn-label">This Week</div>
+                        <div class="earn-val">0.0ETB</div>
+                    </div>
+                    <div class="earn-card">
+                        <div class="earn-label">This Month</div>
+                        <div class="earn-val">0.0ETB</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="card">
+                <h3>Incoming Rides</h3>
+                <div id="requestsList">
+                    <div style="text-align:center; padding: 2rem; color:#999; font-style:italic">
+                        Waiting for dispatch...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/driver.js"></script>
+</body>
+</html>

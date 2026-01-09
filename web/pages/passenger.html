@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare Passenger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/passenger.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">🚕<span>RideShare</span></div>
+        <div class="nav-links">
+            <div class="user-badge" id="userDisplay">Guest</div>
+            <a href="#" style="color:rgba(255,255,255,0.8); text-decoration:none">History</a>
+            <a href="#" style="color:white; font-weight:500; text-decoration:none">Book a Ride</a>
+            <a href="#" onclick="logout()" style="color:#ffcc00; font-weight:600; text-decoration:none; margin-left: 10px;">Logout</a>
+        </div>
+    </nav>
+
+    
+    <div id="loginConfig" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="authTitle">Welcome Back</h2>
+            <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input type="text" id="username" value="yoni" placeholder="Username">
+            </div>
+            <div class="input-wrapper">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="password" value="123" placeholder="Password">
+            </div>
+            <button class="btn-primary" onclick="handleAuth()" id="authBtn">Log In</button>
+            <p style="margin-top:1rem; font-size:0.9rem; color:#666">
+                
+                <a href="passenger_register.html" style="color:var(--primary); text-decoration:none">Create an account</a>
+            </p>
+        </div>
+    </div>
+
+    
+    <div id="ratingModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h2>Ride Completed!</h2>
+            <p>How was your ride?</p>
+            <div style="font-size:2.5rem; margin:1rem 0; cursor:pointer;" id="starContainer">
+                <span onclick="setRate(1)" style="color:#f39c12">★</span>
+                <span onclick="setRate(2)" style="color:#f39c12">★</span>
+                <span onclick="setRate(3)" style="color:#f39c12">★</span>
+                <span onclick="setRate(4)" style="color:#f39c12">★</span>
+                <span onclick="setRate(5)" style="color:#f39c12">★</span>
+            </div>
+            <button class="btn-primary" onclick="submitRating()">Submit Rating</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="booking-panel hidden" id="appInterface">
+            <h2 style="font-size:1.6rem; margin-bottom:1.5rem">Where to?</h2>
+            
+            <div class="input-wrapper" style="display: flex; gap: 10px;">
+                <div style="flex-grow: 1; position: relative;">
+                    <div class="input-icon"><div class="dot-green"></div></div>
+                    <input type="text" id="pickup" placeholder="Pickup Location">
+                </div>
+                <button class="btn-input-action" onclick="manualLocate('pickup')" title="Show on Map">📍</button>
+            </div>
+            <div class="input-wrapper" style="display: flex; gap: 10px;">
+                <div style="flex-grow: 1; position: relative;">
+                    <div class="input-icon"><div class="pin-red"></div></div>
+                    <input type="text" id="destination" placeholder="Dropoff Destination">
+                </div>
+                <button class="btn-input-action" onclick="manualLocate('destination')" title="Show on Map">🗺️</button>
+            </div>
+
+            <div class="ride-selector">
+                <div class="ride-card selected" id="cardRide" onclick="selectRide('STANDARD', this)">
+                    <div class="ride-img">🚗</div>
+                    <div class="ride-info">
+                        <div class="ride-header"><span>Standard Rate</span> <span id="priceRide">ETB 0</span></div>
+                        <div class="ride-meta"><span id="distRide">0 km</span> • <span id="timeRide">0 min</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="reqBtn" onclick="requestRide()">Request Ride</button>
+
+            <div id="statusBox" class="status-box">
+                <div class="spinner"></div>
+                <span id="statusText">Finding closest driver...</span>
+            </div>
+
+            <div id="driverPanel" class="driver-card">
+                <div class="driver-top">
+                    <div class="driver-pic">👨‍✈️</div>
+                    <div>
+                        <div style="font-weight:600; font-size:1.1rem" id="driverName">Searching...</div>
+                        <div style="color:#f39c12; font-size:0.9rem">★ 5.0 • <span id="driverCar">...</span></div>
+                        <div style="color:#777; font-size:0.85rem">Plate: <span id="driverPlate">...</span></div>
+                    </div>
+                </div>
+                <div class="driver-actions">
+                    <button class="btn-outline">💬 Message</button>
+                </div>
+            </div>
+        </div>
+
+        
+        <div id="map"></div>
+    </div>
+
+    <script src="../js/passenger.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Cluster - RideShare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+        .steps-container {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: left;
+            margin-top: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .steps-container h3 {
+            color: var(--secondary);
+            margin-top: 0;
+        }
+        ol {
+            padding-left: 20px;
+            color: var(--text-sec);
+        }
+        li {
+            margin-bottom: 12px;
+        }
+        code {
+            background: rgba(255,255,255,0.1);
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+        }
+        b {
+            color: white;
+        }
+        #leaderIp {
+            color: var(--driver);
+            font-size: 1.1em;
+        }
+        /* Custom card override for full width usage in this context */
+        .download-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 40px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+        .download-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px -10px rgba(78, 140, 255, 0.3);
+        }
+        .icon-large {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .btn-download {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <div style="background:var(--secondary); width:8px; height:8px; border-radius:50%; margin-right:5px"></div>
+            RideShare <span>.</span>
+        </a>
+        <div class="nav-items">
+            <a href="index.html">Home</a>
+            <a href="pages/admin.html">System Admin</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="content">
+            <h1>Scale the Network.</h1>
+            <p style="color: var(--text-sec); margin-bottom: 40px;">Turn this computer into a processing node to power the distributed system.</p>
+            
+            <a href="/download-node" class="download-card">
+                <div class="icon-large">📦</div>
+                <div style="font-size: 1.5rem; font-weight: 700;">Download Node Package</div>
+                <div style="color: var(--text-sec); margin-top: 10px; font-size: 0.9rem;">Includes Java binaries & Start Scripts</div>
+                <button class="btn-download">Download Zip</button>
+            </a>
+
+            <div class="steps-container">
+                <h3>Installation Steps:</h3>
+                <ol>
+                    <li>Extract the downloaded <code>rideshare_node.zip</code> to your Desktop.</li>
+                    <li>Ensure <b>Java JDK</b> is installed on this machine.</li>
+                    <li>Double-click <code style="color: var(--secondary)">join_cluster.bat</code> inside the folder.</li>
+                    <li>When asked for <b>Master Node IP</b>, enter: <b id="leaderIp">Detecting...</b></li>
+                    <li>Enter a unique <b>Node ID</b> (e.g. 3, 4, 5).</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Distributed RideSharing System | <span style="color:var(--text-sec)">Cluster Management</span>
+    </footer>
+
+    <script>
+        document.getElementById('leaderIp').innerText = window.location.hostname;
+    </script>
+</body>
+</html>

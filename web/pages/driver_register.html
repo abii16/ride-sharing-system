@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Sign Up - RideShare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/driver_register.css">
+</head>
+<body>
+
+    <nav>
+        <a href="../index.html" class="logo">🚕<span>RideShare</span></a>
+        <a href="driver.html" class="nav-link">Already have an account? Log In</a>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>Driver Application</h2>
+            
+            <div id="msgBox" class="alert"></div>
+
+            <form id="regForm" onsubmit="event.preventDefault(); register();">
+                <div class="input-group">
+                    <label class="label">Username</label>
+                    <input type="text" id="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">Email Address</label>
+                    <input type="email" id="email" placeholder="name@example.com" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="label">Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                </div>
+
+                <div class="driver-fields">
+                    <div style="color:var(--primary); font-size:0.85rem; font-weight:600; margin-bottom:10px">VEHICLE DETAILS</div>
+                    <div class="input-group">
+                        <label class="label">Model</label>
+                        <input type="text" id="model" placeholder="e.g. Toyota Corolla" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="label">License Plate</label>
+                        <input type="text" id="plate" placeholder="e.g. ABC-123" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="subBtn">Submit Driver Application</button>
+            </form>
+
+            <div class="footer-links">
+                By clicking Submit, you agree to our Terms and Privacy Policy.
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/driver_register.js"></script>
+</body>
+</html>

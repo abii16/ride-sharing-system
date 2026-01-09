@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+    
+    <div id="authScreen">
+        <div class="login-box">
+            <h2>🛡️ Admin Portal</h2>
+            <input type="text" id="username" value="admin" placeholder="Admin Username">
+            <input type="password" id="password" value="admin123" placeholder="Secure Key">
+            <button class="btn-red" onclick="login()">Access Control System</button>
+        </div>
+    </div>
+
+    
+    <div id="app">
+        <aside>
+            <div class="brand">🚀 RideAdmin</div>
+            <div class="menu-item active" onclick="switchView('view-dashboard', this)"><span>📊</span> Dashboard</div>
+            <div class="menu-item" onclick="switchView('view-approvals', this)"><span>✅</span> Driver Approvals</div>
+            <div class="menu-item" onclick="switchView('view-users', this)"><span>👥</span> User Management</div>
+            <div class="menu-item" onclick="switchView('view-monitor', this)"><span>🚖</span> Ride Monitor</div>
+            <div class="menu-item" onclick="switchView('view-logs', this)"><span>⚠️</span> System Logs</div>
+            <div class="menu-item" onclick="logout()" style="color:#e74c3c"><span>🚪</span> Logout</div>
+            
+            <div style="margin-top:auto; font-size:0.8rem; opacity:0.5">
+                v2.4 Distributed Core<br>
+                Connected: <span id="connStatus" style="color:#00ff00">●</span>
+            </div>
+        </aside>
+
+        <main>
+            <div class="header">
+                <h1>Overview</h1>
+                <button class="btn-sm" style="background:white; color:black; border:1px solid #ccc" onclick="refreshData()">↻ Refresh Data</button>
+            </div>
+
+            
+            <div id="view-dashboard" class="view-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val" id="countActive">0</div>
+                        <div class="stat-label">Active Rides</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="countDrivers">0</div>
+                        <div class="stat-label">Registered Drivers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="countUsers">0</div>
+                        <div class="stat-label">Total Passengers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" style="color:var(--admin-red)">$0.00</div>
+                        <div class="stat-label">System Revenue (Est)</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div id="view-users" class="view-section" style="display:none">
+                <div class="data-panel">
+                    <div class="panel-head">
+                        <h3 style="margin:0">System Users</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Rating</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr><td colspan="5">Loading data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            
+            <div id="view-approvals" class="view-section" style="display:none">
+                <div class="header">
+                    <h2>Pending Driver Approvals</h2>
+                    <button class="btn-sm" style="background:white; color:black; border:1px solid #ccc" onclick="refreshDriverRequests()">↻ Refresh List</button>
+                </div>
+                
+                <div class="data-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Vehicle Model</th>
+                                <th>License Plate</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvalTableBody">
+                            <tr><td colspan="6">No pending requests</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            
+            <div id="view-monitor" class="view-section" style="display:none">
+                <h2 style="color:#777; text-align:center; margin-top:50px">🚖 Real-time Ride Map (Coming Soon)</h2>
+                <div style="text-align:center">Active Rides: <span id="monitorCount">0</span></div>
+            </div>
+
+            
+            <div id="view-logs" class="view-section" style="display:none">
+                <h3>System Event Logs</h3>
+                <div class="console-box" id="logConsole">
+                    <div class="log-entry">
+                        <span class="log-time">[SYSTEM]</span> Ready. Waiting for event stream...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>

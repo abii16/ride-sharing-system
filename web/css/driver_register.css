@@ -1,0 +1,123 @@
+        :root {
+            --primary: #4e8cff;
+            --primary-glow: rgba(78, 140, 255, 0.4);
+            --bg: #0a0a0a;
+            --surface: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --glass: rgba(20, 20, 20, 0.8);
+        }
+        
+        body { 
+            margin: 0; 
+            font-family: 'Outfit', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: relative; 
+            overflow: hidden; 
+            color: var(--text-main); 
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(78, 140, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 206, 0, 0.1) 0%, transparent 40%);
+        }
+
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://tile.openstreetmap.org/12/2413/1581.png');
+            background-size: cover;
+            filter: grayscale(100%) invert(100%) opacity(0.1) blur(2px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        
+        nav { 
+            background: rgba(20, 20, 20, 0.6); 
+            padding: 1rem 2rem; 
+            display: flex; 
+            align-items: center; 
+            color: white; 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; text-decoration: none; letter-spacing: -0.5px; }
+        .logo span { margin-left: 0.5rem; color: white; }
+        .nav-link { margin-left: auto; color: white; text-decoration: none; opacity: 0.8; font-size: 0.95rem; transition: 0.3s; }
+        .nav-link:hover { opacity: 1; text-decoration: underline; color: var(--primary); }
+
+        
+        .container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        .card { 
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            width: 100%; max-width: 450px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            border: 1px solid var(--border); 
+            max-height: 90vh; 
+            overflow-y: auto;
+        }
+        
+        h2 { text-align: center; color: var(--text-main); margin-top: 0; margin-bottom: 1.5rem; font-weight: 600; }
+        
+        
+        .input-group { margin-bottom: 1.2rem; }
+        .label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+        
+        
+        input, select { 
+            width: 100%; 
+            padding: 14px 16px; 
+            background: rgba(0, 0, 0, 0.3); 
+            border: 1px solid var(--border);
+            border-radius: 12px; 
+            font-family: inherit; 
+            font-size: 1rem; 
+            box-sizing: border-box; 
+            transition: all 0.3s ease;
+            color: white; 
+        }
+        input:focus, select:focus { 
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .driver-fields { 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 1.2rem; 
+            border-radius: 12px; 
+            margin-bottom: 1.5rem; 
+            border: 1px solid var(--border); 
+        }
+        
+        .btn-primary { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(135deg, #4e8cff, #3a7bd5);
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(78, 140, 255, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(78, 140, 255, 0.4); }
+        
+        .footer-links { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+        
+        .alert { padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.95rem; display: none; font-weight: 500; }
+        .alert-success { background: rgba(0, 230, 118, 0.15); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.3); }
+        .alert-error { background: rgba(255, 78, 78, 0.15); color: #ff4e4e; border: 1px solid rgba(255, 78, 78, 0.3); }
