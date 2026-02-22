@@ -1,6 +1,6 @@
 # Distributed Ride-Sharing System (Java)
 
-A university-grade distributed system extending a basic ride-sharing architecture.
+A distributed system extending a basic ride-sharing architecture.
 This project uses **Raw TCP Sockets** and **JSON** for inter-process communication (IPC), strictly avoiding HTTP/REST or Spring Boot to demonstrate low-level distributed systems concepts.
 
 ## 🏗 System Architecture
