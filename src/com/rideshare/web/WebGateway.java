@@ -160,8 +160,20 @@ public class WebGateway {
             String path = t.getRequestURI().getPath();
             if (path.equals("/")) path = "/index.html"; 
             
-            File file = new File("web" + path);
-            if (file.exists()) {
+            File baseDir = new File("web").getCanonicalFile();
+            File file = new File(baseDir, path.substring(1)).getCanonicalFile();
+            
+            // Strictly block Directory Traversal attacks (CWE-22)
+            if (!file.getPath().startsWith(baseDir.getPath())) {
+                String response = "403 Forbidden: Directory traversal attempt detected.";
+                t.sendResponseHeaders(403, response.length());
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+                return;
+            }
+
+            if (file.exists() && file.isFile()) {
                 t.sendResponseHeaders(200, file.length());
                 OutputStream os = t.getResponseBody();
                 Files.copy(file.toPath(), os);
