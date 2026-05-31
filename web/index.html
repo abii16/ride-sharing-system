@@ -4,42 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RideShare - Future of Mobility</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
     <nav>
         <a href="index.html" class="logo">
-            <div style="background:var(--primary); width:8px; height:8px; border-radius:50%; margin-right:5px"></div>
+            <div class="logo-dot"></div>
             RideShare<span>.</span>
         </a>
+        <div class="nav-items">
+            <a href="pages/auth.html">Find a Ride</a>
+            <a href="pages/auth.html">Become a Driver</a>
+            <a href="pages/auth.html" class="nav-cta-btn">Sign In</a>
+        </div>
     </nav>
 
     <div class="hero">
-        <div class="content">
-            <h1 style="font-size: 5.5rem; margin-bottom: 25px;">Go Anywhere.</h1>
-            <p class="hero-desc" style="font-size: 1.35rem; max-width: 620px; margin: 0 auto 40px auto; color: var(--text-sec); line-height: 1.7; font-weight: 300;">
-                Tap a button, get a ride. Connecting passengers with reliable, real-time drivers for seamless commutes, city travels, and everyday journeys.
-            </p>
-            <a href="pages/auth.html" class="enter-portal-btn" style="display: inline-block; background: var(--primary); color: white; text-decoration: none; padding: 18px 45px; font-size: 1.15rem; font-weight: 600; border-radius: 14px; box-shadow: 0 6px 20px rgba(78, 140, 255, 0.3); transition: all 0.3s ease;">
-                Get Started &rarr;
-            </a>
+        <div class="hero-grid">
+            <div class="content-left">
+                <span class="badge">✨ The New Era of Mobility</span>
+                <h1>Go Anywhere.<br><span class="gradient-text">Seamlessly.</span></h1>
+                <p class="hero-desc">
+                    Tap a button, get a ride. Connecting passengers with reliable, real-time drivers for seamless commutes, city travels, and everyday journeys.
+                </p>
+                <a href="pages/auth.html" class="enter-portal-btn">
+                    Get Started &rarr;
+                </a>
+            </div>
             
-            <style>
-                .enter-portal-btn:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 25px rgba(78, 140, 255, 0.5);
-                }
-                .enter-portal-btn:active {
-                    transform: translateY(-1px);
-                }
-            </style>
+            <div class="content-right">
+                <div class="mock-phone">
+                    <div class="phone-screen">
+                        <!-- Mock Map Background -->
+                        <div class="mock-map">
+                            <div class="grid-line horizontal h1"></div>
+                            <div class="grid-line horizontal h2"></div>
+                            <div class="grid-line vertical v1"></div>
+                            <div class="grid-line vertical v2"></div>
+                            
+                            <!-- Mock Route -->
+                            <svg class="mock-route-svg">
+                                <path d="M 50 220 Q 150 120 230 70" fill="none" stroke="#4e8cff" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"/>
+                            </svg>
+                            
+                            <!-- Markers -->
+                            <div class="mock-marker start">
+                                <span class="marker-pulse"></span>
+                            </div>
+                            <div class="mock-marker end">📍</div>
+                            
+                            <!-- Animated Car -->
+                            <div class="mock-car">🚕</div>
+                        </div>
+                        
+                        <!-- Floating Card -->
+                        <div class="mock-card">
+                            <div class="card-bar"></div>
+                            <h3>Where to?</h3>
+                            <div class="selector-row active">
+                                <span class="emoji">🚕</span>
+                                <div class="details">
+                                    <div class="title">Standard Ride</div>
+                                    <div class="subtitle">5 min away • Fast match</div>
+                                </div>
+                                <div class="price">$12.50</div>
+                            </div>
+                            <div class="selector-row">
+                                <span class="emoji">🚘</span>
+                                <div class="details">
+                                    <div class="title">Premium Lux</div>
+                                    <div class="subtitle">2 min away • High comfort</div>
+                                </div>
+                                <div class="price">$22.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <footer>
-        &copy; 2026 Distributed RideSharing System | Built with &#10084; by softwares
+        &copy; 2026 Distributed RideSharing System | Built with &hearts; by softwares
     </footer>
 
 </body>

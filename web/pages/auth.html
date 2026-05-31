@@ -18,94 +18,140 @@
 </head>
 <body class="active-passenger active-login">
 
-    <nav>
-        <a href="../index.html" class="logo">
-            <div style="background:var(--primary); width:8px; height:8px; border-radius:50%; margin-right:8px;" id="logoDot"></div>
-            RideShare<span>.</span>
-        </a>
-    </nav>
-
-    <div class="container">
-        <div class="auth-card">
+    <div class="auth-split-container">
+        
+        <!-- Left Side: Brand Panel -->
+        <div class="brand-panel">
+            <div class="brand-top">
+                <a href="../index.html" class="brand-logo">
+                    <div class="logo-dot"></div>
+                    RideShare<span>.</span>
+                </a>
+            </div>
             
-            <div class="auth-header">
-                <h2 id="portalHeading">Sign In</h2>
-                <p id="portalSubheading">Welcome back! Please enter your credentials to log in.</p>
-            </div>
-
-            <!-- Role Tabs (Only visible when signing up) -->
-            <div class="role-tabs" id="authRoleTabs" style="display: none;">
-                <button class="role-tab active" data-role="PASSENGER" onclick="switchRole('PASSENGER')">👤 Passenger</button>
-                <button class="role-tab" data-role="DRIVER" onclick="switchRole('DRIVER')">🚘 Driver</button>
-            </div>
-
-            <!-- Mode Selector (Log In / Sign Up) -->
-            <div class="mode-toggle" id="modeContainer">
-                <span class="mode-link active" id="modeLogin" onclick="switchMode('LOGIN')">LOG IN</span>
-                <span class="mode-link" id="modeSignup" onclick="switchMode('SIGNUP')">SIGN UP</span>
-            </div>
-
-            <!-- Form -->
-            <form id="authForm" onsubmit="event.preventDefault(); handleSubmit();">
+            <div class="brand-middle">
+                <span class="brand-badge">✨ Security First Platform</span>
+                <h1>Secure Mobility,<br><span class="gradient-text">At Your Fingertips.</span></h1>
+                <p class="brand-desc">
+                    Access your account through our unified, role-agnostic security gateway. Real-time matching, encrypted session storage, and instant dispatches.
+                </p>
                 
-                <div class="input-group">
-                    <label for="username">Username</label>
-                    <div class="input-wrapper">
-                        <span class="icon">👤</span>
-                        <input type="text" id="username" placeholder="Enter your username" required>
-                    </div>
-                </div>
-
-                <div class="input-group" id="emailGroup" style="display: none;">
-                    <label for="email">Email Address</label>
-                    <div class="input-wrapper">
-                        <span class="icon">✉️</span>
-                        <input type="email" id="email" placeholder="name@example.com">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="password" id="passLabel">Password</label>
-                    <div class="input-wrapper">
-                        <span class="icon">🔒</span>
-                        <input type="password" id="password" placeholder="Enter your password" required style="padding-right: 45px;">
-                        <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</span>
-                    </div>
-                    <small id="passHelp" style="display: none; color: var(--text-muted); font-size: 0.78rem; margin-top: 6px; line-height: 1.4;">
-                        Password must be at least 6 characters and contain an uppercase letter, lowercase letter, number, and special character.
-                    </small>
-                </div>
-
-                <!-- Driver Only Registration Fields -->
-                <div class="driver-only-fields" id="driverFields">
-                    <div class="input-group">
-                        <label for="model">Vehicle Model</label>
-                        <div class="input-wrapper">
-                            <span class="icon">🚗</span>
-                            <input type="text" id="model" placeholder="e.g. Toyota Corolla">
+                <div class="feature-bullets">
+                    <div class="feat-item">
+                        <span class="feat-icon">✓</span>
+                        <div class="feat-details">
+                            <strong>10-Min Autoclose Guard</strong>
+                            <span>Secures inactive terminals automatically.</span>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label for="plate">License Plate</label>
-                        <div class="input-wrapper">
-                            <span class="icon">🔢</span>
-                            <input type="text" id="plate" placeholder="e.g. AA-12345">
+                    <div class="feat-item">
+                        <span class="feat-icon">✓</span>
+                        <div class="feat-details">
+                            <strong>Double-Layer Password Complexity</strong>
+                            <span>Secured using strict hashing protocols.</span>
+                        </div>
+                    </div>
+                    <div class="feat-item">
+                        <span class="feat-icon">✓</span>
+                        <div class="feat-details">
+                            <strong>Integrated Request WAF</strong>
+                            <span>Protects all API endpoints from malicious exploits.</span>
                         </div>
                     </div>
                 </div>
-
-                <button type="submit" class="btn-submit" id="btnSubmit">LOG IN</button>
-            </form>
-
-            <!-- Alert Box -->
-            <div id="alertBox" class="alert-box"></div>
-
+            </div>
+            
+            <div class="brand-bottom">
+                &copy; 2026 Distributed RideSharing System. All rights reserved.
+            </div>
         </div>
-    </div>
+        
+        <!-- Right Side: Unified Form Panel -->
+        <div class="form-panel">
+            <div class="brand-top-mobile">
+                <a href="../index.html" class="brand-logo">
+                    <div class="logo-dot"></div>
+                    RideShare<span>.</span>
+                </a>
+            </div>
+            
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 id="portalHeading">Sign In</h2>
+                    <p id="portalSubheading">Welcome back! Please enter your credentials to log in.</p>
+                </div>
 
-    <footer>
-        &copy; 2026 Distributed RideSharing System | Built with &#10084; by softwares
-    </footer>
+                <!-- Role Tabs (Only visible when signing up) -->
+                <div class="role-tabs" id="authRoleTabs" style="display: none;">
+                    <button class="role-tab active" data-role="PASSENGER" onclick="switchRole('PASSENGER')">👤 Passenger</button>
+                    <button class="role-tab" data-role="DRIVER" onclick="switchRole('DRIVER')">🚘 Driver</button>
+                </div>
+
+                <!-- Mode Selector (Log In / Sign Up) -->
+                <div class="mode-toggle" id="modeContainer">
+                    <span class="mode-link active" id="modeLogin" onclick="switchMode('LOGIN')">LOG IN</span>
+                    <span class="mode-link" id="modeSignup" onclick="switchMode('SIGNUP')">SIGN UP</span>
+                </div>
+
+                <!-- Form -->
+                <form id="authForm" onsubmit="event.preventDefault(); handleSubmit();">
+                    
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <span class="icon">👤</span>
+                            <input type="text" id="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group" id="emailGroup" style="display: none;">
+                        <label for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <span class="icon">✉️</span>
+                            <input type="email" id="email" placeholder="name@example.com">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password" id="passLabel">Password</label>
+                        <div class="input-wrapper">
+                            <span class="icon">🔒</span>
+                            <input type="password" id="password" placeholder="Enter your password" required style="padding-right: 45px;">
+                            <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</span>
+                        </div>
+                        <small id="passHelp" style="display: none; color: var(--text-muted); font-size: 0.78rem; margin-top: 8px; line-height: 1.4;">
+                            Password must be at least 6 characters and contain an uppercase letter, lowercase letter, number, and special character.
+                        </small>
+                    </div>
+
+                    <!-- Driver Only Registration Fields -->
+                    <div class="driver-only-fields" id="driverFields">
+                        <div class="input-group">
+                            <label for="model">Vehicle Model</label>
+                            <div class="input-wrapper">
+                                <span class="icon">🚗</span>
+                                <input type="text" id="model" placeholder="e.g. Toyota Corolla">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="plate">License Plate</label>
+                            <div class="input-wrapper">
+                                <span class="icon">🔢</span>
+                                <input type="text" id="plate" placeholder="e.g. AA-12345">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="btnSubmit">LOG IN</button>
+                </form>
+
+                <!-- Alert Box -->
+                <div id="alertBox" class="alert-box"></div>
+
+            </div>
+        </div>
+        
+    </div>
 
     <script src="../js/auth.js"></script>
 </body>
