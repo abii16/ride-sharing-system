@@ -335,6 +335,9 @@ public class DispatchServer {
                              
                              JSONObject dbResp = dbClient.receive();
                              int rideId = dbResp.has("generatedId") ? dbResp.getInt("generatedId") : -1;
+                             if (rideId != -1) {
+                                 RideManager.getInstance().addActiveRide(rideId, driverId, "ASSIGNED");
+                             }
 
                             
                             JSONObject notifyMsg = new JSONObject()
@@ -364,11 +367,23 @@ public class DispatchServer {
                  
                  if (data != null && data.length() > 0) {
                      JSONObject ride = data.getJSONObject(0);
+                     String rStatus = ride.getString("status");
+                     int rId = ride.getInt("id");
+                     int dId = ride.optInt("driver_id", -1);
+                     
+                     if ("COMPLETED".equals(rStatus) || "CANCELLED".equals(rStatus)) {
+                         RideManager.getInstance().removeActiveRide(rId);
+                     } else {
+                         if (dId != -1) {
+                             RideManager.getInstance().addActiveRide(rId, dId, rStatus);
+                         }
+                     }
+                     
                      out.println(new JSONObject()
                         .put("type", "RIDE_UPDATE")
-                        .put("status", ride.getString("status"))
-                        .put("driverId", ride.getInt("driver_id"))
-                        .put("rideId", ride.getInt("id"))
+                        .put("status", rStatus)
+                        .put("driverId", dId)
+                        .put("rideId", rId)
                         .toString());
                  } else {
                      out.println(new JSONObject().put("type", "RIDE_UPDATE").put("status", "NONE").toString());

@@ -103,6 +103,7 @@ public class DriverService {
                     } else if (type.equals("NOTIFY_DRIVER")) {
                         
                         int targetDriverId = msg.getInt("driverId");
+                        driverAvailability.put(targetDriverId, false); // Driver is now busy
                         PrintWriter driverOut = onlineDrivers.get(targetDriverId);
                         if (driverOut != null) {
                             JSONObject pushMsg = new JSONObject()
@@ -116,7 +117,7 @@ public class DriverService {
                     } else if (type.equals("RIDE_COMPLETE")) {
                         int rideId = msg.getInt("rideId");
                         System.out.println("Driver " + driverId + " completing ride " + rideId);
-                        
+                        driverAvailability.put(driverId, true); // Driver is now available again
                         
                         try (NetworkClient db = new NetworkClient("localhost", 7000)) {
                             db.connect();
