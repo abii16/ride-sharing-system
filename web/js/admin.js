@@ -69,7 +69,8 @@
             document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
             
             
-            document.getElementById(viewId).style.display = 'block';
+            const targetEl = document.getElementById(viewId);
+            if (targetEl) targetEl.style.display = 'block';
 
             
             if(viewId === 'view-approvals') refreshDriverRequests();
@@ -159,6 +160,7 @@
 
         function renderSecurityDashboard(data) {
             latestSecurityData = data;
+            if (!document.getElementById('sec-waf-status')) return;
             document.getElementById('sec-waf-status').innerText = data.sqlFilterEnabled ? "Enabled" : "Disabled";
             document.getElementById('sec-waf-status').style.color = data.sqlFilterEnabled ? "#00ff88" : "#ff4e4e";
             

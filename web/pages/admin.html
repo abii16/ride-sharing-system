@@ -26,7 +26,7 @@
             <div class="menu-item active" onclick="switchView('view-dashboard', this)"><span>📊</span> Dashboard</div>
             <div class="menu-item" onclick="switchView('view-approvals', this)"><span>✅</span> Driver Approvals</div>
             <div class="menu-item" onclick="switchView('view-users', this)"><span>👥</span> User Management</div>
-            <div class="menu-item" onclick="switchView('view-security', this)" style="color:#00ff88; font-weight:600"><span>🛡️</span> Security Center</div>
+
             <div class="menu-item" onclick="switchView('view-monitor', this)"><span>🚖</span> Ride Monitor</div>
             <div class="menu-item" onclick="switchView('view-logs', this)"><span>⚠️</span> System Logs</div>
             <div class="menu-item" onclick="logout()" style="color:#e74c3c"><span>🚪</span> Logout</div>
@@ -120,101 +120,7 @@
                 <div style="text-align:center">Active Rides: <span id="monitorCount">0</span></div>
             </div>
 
-            <!-- Security Center View -->
-            <div id="view-security" class="view-section" style="display:none">
-                <div class="header">
-                    <h2>🛡️ Enterprise Security Operations Center (SOC)</h2>
-                    <span class="status-badge role-driver" style="background:#00ff8822; color:#00ff88; border-color:#00ff8844">ACTIVE INTRUSION PREVENTION</span>
-                </div>
 
-                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
-                    <div class="stat-card" style="border-color: #00ff8844;">
-                        <div class="stat-val" style="color:#00ff88" id="sec-waf-status">Enabled</div>
-                        <div class="stat-label">Web Application Firewall (WAF)</div>
-                        <div style="margin-top:10px">
-                            <button class="btn-sm" id="btn-toggle-waf" onclick="toggleSecurityControl('sqlFilter')">Toggle Control</button>
-                        </div>
-                    </div>
-                    <div class="stat-card" style="border-color: #ff9f4344;">
-                        <div class="stat-val" style="color:#ff9f43" id="sec-brute-status">Active</div>
-                        <div class="stat-label">Brute-Force Attack Shield</div>
-                        <div style="margin-top:10px">
-                            <button class="btn-sm" id="btn-toggle-brute" onclick="toggleSecurityControl('bruteForce')">Toggle Control</button>
-                        </div>
-                    </div>
-                    <div class="stat-card" style="border-color: #4e8cff44;">
-                        <div class="stat-val" style="color:#4e8cff" id="sec-crypto-status">AES-256</div>
-                        <div class="stat-label">PII Encryption standard (SHA-256 + AES)</div>
-                        <div style="margin-top:10px">
-                            <button class="btn-sm" id="btn-toggle-crypto" onclick="toggleSecurityControl('encryption')">Toggle Control</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap:20px;">
-                    <!-- Vulnerability Sandbox / Penetration Testing -->
-                    <div class="data-panel" style="padding:20px;">
-                        <div class="panel-head" style="padding:0 0 15px 0; border-bottom:1px solid var(--border)">
-                            <h3 style="color:#ff4e4e">⚠️ Vulnerability Penetration Sandbox</h3>
-                            <p style="font-size:0.8rem; color:var(--text-muted); margin:5px 0 0 0">
-                                Simulate external threat vectors to validate WAF, IDS, and cryptographic controls.
-                            </p>
-                        </div>
-                        <div style="margin-top:15px">
-                            <label style="font-size:0.9rem; font-weight:600; display:block; margin-bottom:8px">Select Attack Vector:</label>
-                            <select id="sandbox-attack-vector" style="width:100%; padding:12px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:8px; color:white; font-family:inherit; margin-bottom:15px">
-                                <option value="SQL_INJECT">SQL Injection Attack (e.g. ' OR 1=1 --)</option>
-                                <option value="XSS_SCRIPT">Cross-Site Scripting (XSS) (e.g. &lt;script&gt;alert(1)&lt;/script&gt;)</option>
-                                <option value="BRUTE_FORCE">Brute Force Login Spray (5+ rapid failures)</option>
-                            </select>
-
-                            <button class="btn-red" style="padding:12px; width:100%; background:linear-gradient(135deg, #ff9f43, #ff4e4e); box-shadow:none" onclick="triggerSandboxPenetration()">Launch Attack Simulation</button>
-                            
-                            <div id="sandbox-result" style="margin-top:15px; padding:15px; border-radius:8px; display:none; font-family:monospace; font-size:0.85rem"></div>
-                        </div>
-                    </div>
-
-                    <!-- Cryptographic Key Status -->
-                    <div class="data-panel" style="padding:20px;">
-                        <div class="panel-head" style="padding:0 0 15px 0; border-bottom:1px solid var(--border)">
-                            <h3>🔑 Cryptographic Key Registry</h3>
-                            <p style="font-size:0.8rem; color:var(--text-muted); margin:5px 0 0 0">
-                                Real-time encryption/hashing status details.
-                            </p>
-                        </div>
-                        <div style="margin-top:15px; font-size:0.9rem; line-height:1.6">
-                            <div><strong>Database Hashing:</strong> <span style="color:#00ff88">SHA-256 (Salted, 16-hex characters)</span></div>
-                            <div style="margin-top:8px"><strong>Symmetric Encryption:</strong> <span style="color:#00ff88">AES-256-CBC (PKCS5Padding)</span></div>
-                            <div style="margin-top:8px"><strong>Master Seed:</strong> <code style="background:rgba(0,0,0,0.5); padding:3px 6px; border-radius:4px">RideShareSecureKey...EnterpriseShield!</code></div>
-                            <div style="margin-top:8px"><strong>Personal Identifiable Data Protected:</strong></div>
-                            <ul style="margin:5px 0 0 0; padding-left:20px; color:var(--text-muted)">
-                                <li>User Emails (Encrypted in <code>users.email</code>)</li>
-                                <li>Driver License Plates (Encrypted in <code>drivers.license_plate</code>)</li>
-                            </ul>
-                            <button class="btn-sm" style="margin-top:20px; background:linear-gradient(135deg, #00ff88, #0088ff); color:black; font-weight:bold; border:none; width:100%; padding:10px; cursor:pointer;" onclick="downloadSecurityReport()">📥 Export Security Audit Report</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="data-panel" style="margin-top:20px">
-                    <div class="panel-head">
-                        <h3 style="margin:0">🚨 Active Intrusion Detection Logs (Real-time IDS)</h3>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width:10%">ID</th>
-                                <th style="width:20%">Threat Type</th>
-                                <th style="width:50%">Incident / Alert Details</th>
-                                <th style="width:20%">Timestamp</th>
-                            </tr>
-                        </thead>
-                        <tbody id="securityLogsTableBody">
-                            <tr><td colspan="4">No security logs recorded. System secure.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
             
             <div id="view-logs" class="view-section" style="display:none">
