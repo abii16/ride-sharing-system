@@ -126,7 +126,7 @@ aside {
 main { flex: 1; padding: 40px; overflow-y: auto; position: relative; }
 
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-.header h1 { margin: 0; font-size: 2rem; font-weight: 700; background: linear-gradient(to right, #fff, #bbb); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+.header h1 { margin: 0; font-size: 2rem; font-weight: 700; background: linear-gradient(to right, #fff, #bbb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
 
 
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
