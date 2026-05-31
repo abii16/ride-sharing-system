@@ -2,6 +2,8 @@ package com.rideshare.dispatch;
 
 import com.rideshare.common.MessageType;
 import com.rideshare.common.NetworkClient;
+import com.rideshare.security.CryptoUtil;
+import com.rideshare.security.SecurityMonitor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -136,10 +138,15 @@ public class DispatchServer {
 
                 System.out.println("[Dispatch] Registering: " + username + " (" + email + ") as " + role);
 
-                
-                
+                // Advanced password hashing with salt (SHA-256)
+                String salt = CryptoUtil.generateSalt();
+                String passwordDbValue = salt + ":" + CryptoUtil.hashPassword(password, salt);
+
+                // AES-256 Symmetric Encryption for PII
+                String emailDbValue = CryptoUtil.encryptAES(email);
+
                 String sql = String.format("INSERT IGNORE INTO users (username, email, password_hash, role) VALUES ('%s', '%s', '%s', '%s')", 
-                    username, email, password, role);
+                    username, emailDbValue, passwordDbValue, role);
                 
                 dbClient.send(new JSONObject().put("type", "DB_UPDATE").put("sql", sql));
                 JSONObject dbRes = dbClient.receive();
@@ -153,41 +160,36 @@ public class DispatchServer {
                     return;
                 }
                 
-                
-                
-                
                 if (dbRes.has("generatedId") && dbRes.getInt("generatedId") > 0) {
                      int newUserId = dbRes.getInt("generatedId");
                      
-                     
                      if ("DRIVER".equals(role)) {
-                         
-                         String model = doc.optString("vehicle_model", "Pending Model");
-                         String plate = doc.optString("license_plate", "NEW-" + newUserId);
-                         
-                         
-                         String dSql = String.format("INSERT INTO drivers (user_id, vehicle_model, license_plate, status) VALUES (%d, '%s', '%s', 'PENDING')", 
-                            newUserId, model, plate);
-                            
-                         dbClient.send(new JSONObject().put("type", "DB_UPDATE").put("sql", dSql));
+                          String model = doc.optString("vehicle_model", "Pending Model");
+                          String plate = doc.optString("license_plate", "NEW-" + newUserId);
+                          
+                          // AES-256 Symmetric Encryption for License Plate (PII)
+                          String plateDbValue = CryptoUtil.encryptAES(plate);
+                          
+                          String dSql = String.format("INSERT INTO drivers (user_id, vehicle_model, license_plate, status) VALUES (%d, '%s', '%s', 'PENDING')", 
+                             newUserId, model, plateDbValue);
+                             
+                          dbClient.send(new JSONObject().put("type", "DB_UPDATE").put("sql", dSql));
 
-                         JSONObject dRes = dbClient.receive();
-                         if ("ERROR".equalsIgnoreCase(dRes.optString("status")) || dRes.optInt("rowsAffected", 0) <= 0) {
-                             out.println(new JSONObject()
-                                 .put("type", "AUTH_RESPONSE")
-                                 .put("success", false)
-                                 .put("message", "Driver registration failed (plate may already exist)")
-                                 .toString());
-                             return;
-                         }
-                         
-                         
-                         out.println(new JSONObject().put("type", "AUTH_RESPONSE").put("success", true).put("message", "Registration Successful! Account pending admin approval.").toString());
+                          JSONObject dRes = dbClient.receive();
+                          if ("ERROR".equalsIgnoreCase(dRes.optString("status")) || dRes.optInt("rowsAffected", 0) <= 0) {
+                              out.println(new JSONObject()
+                                  .put("type", "AUTH_RESPONSE")
+                                  .put("success", false)
+                                  .put("message", "Driver registration failed (plate may already exist)")
+                                  .toString());
+                              return;
+                          }
+                          
+                          out.println(new JSONObject().put("type", "AUTH_RESPONSE").put("success", true).put("message", "Registration Successful! Account pending admin approval.").toString());
 
-                     } else {
-                        
-                        out.println(new JSONObject().put("type", "AUTH_RESPONSE").put("success", true).put("message", "Registration Successful!").toString());
-                     }
+                      } else {
+                         out.println(new JSONObject().put("type", "AUTH_RESPONSE").put("success", true).put("message", "Registration Successful!").toString());
+                      }
 
                 } else {
                      out.println(new JSONObject().put("type", "AUTH_RESPONSE").put("success", false).put("message", "Username already exists").toString());
@@ -196,7 +198,6 @@ public class DispatchServer {
             } else if (type.equals(MessageType.AUTH_LOGIN.name())) {
                 String username = doc.getString("username");
                 System.out.println("[Dispatch] Processing Login for: " + username);
-                
                 
                 JSONObject dbReq = new JSONObject()
                     .put("type", "DB_QUERY")
@@ -210,12 +211,27 @@ public class DispatchServer {
                 if (users != null && users.length() > 0) {
                     JSONObject user = users.getJSONObject(0);
                     
-                    if (user.getString("password_hash").equals(doc.getString("password"))) {
+                    String storedPassword = user.getString("password_hash");
+                    String inputPassword = doc.getString("password");
+                    
+                    // Verify salted password or plain fallback
+                    boolean passwordMatches = false;
+                    if (storedPassword.contains(":")) {
+                        String[] parts = storedPassword.split(":", 2);
+                        String salt = parts[0];
+                        String expectedHash = parts[1];
+                        String inputHash = CryptoUtil.hashPassword(inputPassword, salt);
+                        passwordMatches = expectedHash.equals(inputHash);
+                    } else {
+                        // Plain fallback or SHA-256 without salt
+                        passwordMatches = storedPassword.equals(inputPassword) || 
+                                          CryptoUtil.hashPassword(inputPassword, "").equals(storedPassword);
+                    }
+                    
+                    if (passwordMatches) {
                         String role = user.getString("role");
                         
-                        
                         if ("DRIVER".equals(role)) {
-                            
                             String status = user.optString("driver_status");
                             if ("PENDING".equalsIgnoreCase(status) || "REJECTED".equalsIgnoreCase(status)) {
                                 out.println(new JSONObject()
@@ -232,13 +248,17 @@ public class DispatchServer {
                             onlinePassengers.put(userId, out); 
                         }
                         
+                        // AES-256 Symmetric Decryption for client presentation
+                        String decryptedEmail = CryptoUtil.decryptAES(user.optString("email", ""));
+                        String decryptedPlate = CryptoUtil.decryptAES(user.optString("license_plate", "N/A"));
+
                         out.println(new JSONObject()
                             .put("type", "AUTH_RESPONSE")
                             .put("success", true)
                             .put("userId", userId)
-                            .put("email", user.optString("email", ""))
+                            .put("email", decryptedEmail)
                             .put("vehicle_model", user.optString("vehicle_model", "N/A"))
-                            .put("license_plate", user.optString("license_plate", "N/A"))
+                            .put("license_plate", decryptedPlate)
                             .put("rating", user.optDouble("rating", 5.0))
                             .put("role", role).toString());
                         success = true;
@@ -384,10 +404,7 @@ public class DispatchServer {
                  out.println(new JSONObject().put("activeRides", activeRides).toString());
             
             } else if (type.equals("ADMIN_GET_SYSTEM_DATA")) {
-                
                 int activeRides = RideManager.getInstance().getActiveRideCount();
-                
-                
                 
                 String sql = "SELECT u.id, u.username, u.role, u.rating, u.is_blocked, d.vehicle_model, d.license_plate, d.status " +
                              "FROM users u LEFT JOIN drivers d ON u.id = d.user_id";
@@ -399,11 +416,57 @@ public class DispatchServer {
                 
                 JSONArray users = dbRes.has("data") ? (JSONArray) dbRes.get("data") : new JSONArray();
                 
+                // Decrypt emails and license plates for the Admin view
+                for (int i = 0; i < users.length(); i++) {
+                    JSONObject u = users.getJSONObject(i);
+                    if (u.has("license_plate")) {
+                        u.put("license_plate", CryptoUtil.decryptAES(u.getString("license_plate")));
+                    }
+                    if (u.has("email")) {
+                        u.put("email", CryptoUtil.decryptAES(u.getString("email")));
+                    }
+                }
+
                 out.println(new JSONObject()
                     .put("type", "ADMIN_DATA_RESPONSE")
                     .put("activeRides", activeRides)
                     .put("users", users)
                     .toString());
+            
+            } else if (type.equals("ADMIN_GET_SECURITY_DATA")) {
+                // Fetch audit logs
+                String sql = "SELECT * FROM audit_logs ORDER BY id DESC LIMIT 50";
+                dbClient.send(new JSONObject().put("type", "DB_QUERY").put("sql", sql));
+                JSONObject dbRes = dbClient.receive();
+                JSONArray logs = dbRes.optJSONArray("data");
+                if (logs == null) logs = new JSONArray();
+
+                // Build security overview response
+                JSONObject securityData = new JSONObject()
+                    .put("type", "ADMIN_SECURITY_RESPONSE")
+                    .put("sqlFilterEnabled", SecurityMonitor.SQL_FILTER_ENABLED)
+                    .put("bruteForceProtection", SecurityMonitor.BRUTE_FORCE_PROTECTION)
+                    .put("encryptionEnabled", SecurityMonitor.ENCRYPTION_ENABLED)
+                    .put("logs", logs);
+
+                out.println(securityData.toString());
+
+            } else if (type.equals("ADMIN_TOGGLE_SECURITY")) {
+                String setting = doc.getString("setting");
+                boolean value = doc.getBoolean("value");
+                if ("sqlFilter".equals(setting)) {
+                    SecurityMonitor.SQL_FILTER_ENABLED = value;
+                } else if ("bruteForce".equals(setting)) {
+                    SecurityMonitor.BRUTE_FORCE_PROTECTION = value;
+                } else if ("encryption".equals(setting)) {
+                    SecurityMonitor.ENCRYPTION_ENABLED = value;
+                }
+                
+                // Log toggle event
+                SecurityMonitor.logSecurityEvent(dbClient, "CONFIG_CHANGE", 
+                    "Security setting '" + setting + "' set to: " + value);
+
+                out.println(new JSONObject().put("success", true).toString());
             
             } else if (type.equals("ADMIN_APPROVE_DRIVER")) {
                 int driverId = doc.getInt("driverId");

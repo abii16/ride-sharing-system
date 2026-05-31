@@ -1,6 +1,7 @@
 package com.rideshare.web;
 
 import com.rideshare.common.NetworkClient;
+import com.rideshare.security.SecurityMonitor;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -89,18 +90,54 @@ public class WebGateway {
                     String body = new String(readAll(t.getRequestBody()));
                     JSONObject json = new JSONObject(body);
                     
+                    String username = json.getString("username");
+                    String email = json.optString("email", "");
+                    String password = json.getString("password");
+                    String role = json.getString("role");
+                    String model = json.optString("vehicle_model", "");
+                    String plate = json.optString("license_plate", "");
+
+                    // SQL Injection Shield
+                    if (SecurityMonitor.hasSQLInjection(username) || SecurityMonitor.hasSQLInjection(email) || 
+                        SecurityMonitor.hasSQLInjection(password) || SecurityMonitor.hasSQLInjection(role) ||
+                        SecurityMonitor.hasSQLInjection(model) || SecurityMonitor.hasSQLInjection(plate)) {
+                        
+                        try (NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT)) {
+                            authClient.connect();
+                            SecurityMonitor.logSecurityEvent(authClient, "SQL_INJECTION_BLOCKED", 
+                                "WAF blocked SQL Injection in Registration payload for user: " + username);
+                        } catch (Exception ignored) {}
+                        
+                        sendError(t, 403, "WAF Shield Alert: Malicious SQL injection payload blocked.");
+                        return;
+                    }
+
+                    // XSS Scripting Shield
+                    if (SecurityMonitor.hasXSS(username) || SecurityMonitor.hasXSS(email) || 
+                        SecurityMonitor.hasXSS(password) || SecurityMonitor.hasXSS(model) || 
+                        SecurityMonitor.hasXSS(plate)) {
+                        
+                        try (NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT)) {
+                            authClient.connect();
+                            SecurityMonitor.logSecurityEvent(authClient, "XSS_BLOCKED", 
+                                "WAF blocked Script Injection in Registration payload for user: " + username);
+                        } catch (Exception ignored) {}
+                        
+                        sendError(t, 403, "WAF Shield Alert: Cross-Site Scripting (XSS) payload blocked.");
+                        return;
+                    }
                     
                     NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT);
                     authClient.connect();
                     
                     authClient.send(new JSONObject()
                         .put("type", "AUTH_REGISTER")
-                        .put("username", json.getString("username"))
-                        .put("email", json.optString("email", "")) 
-                        .put("password", json.getString("password"))
-                        .put("role", json.getString("role"))
-                        .put("vehicle_model", json.optString("vehicle_model"))
-                        .put("license_plate", json.optString("license_plate"))); 
+                        .put("username", username)
+                        .put("email", email) 
+                        .put("password", password)
+                        .put("role", role)
+                        .put("vehicle_model", model)
+                        .put("license_plate", plate)); 
                     
                     JSONObject res = authClient.receive();
                     authClient.close();
@@ -147,6 +184,26 @@ public class WebGateway {
                     String body = new String(readAll(t.getRequestBody()));
                     JSONObject json = new JSONObject(body);
                     
+                    String username = json.getString("username");
+                    String password = json.getString("password");
+
+                    // SQL Injection Shield
+                    if (SecurityMonitor.hasSQLInjection(username) || SecurityMonitor.hasSQLInjection(password)) {
+                        try (NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT)) {
+                            authClient.connect();
+                            SecurityMonitor.logSecurityEvent(authClient, "SQL_INJECTION_BLOCKED", 
+                                "WAF blocked SQL Injection in Login payload for user: " + username);
+                        } catch (Exception ignored) {}
+                        
+                        sendError(t, 403, "WAF Shield Alert: Malicious SQL injection payload blocked.");
+                        return;
+                    }
+
+                    // Brute Force Protection
+                    if (SecurityMonitor.checkBruteForceLimit(username)) {
+                        sendError(t, 429, "Access Locked: Too many failed login attempts. Try again later.");
+                        return;
+                    }
                     
                     NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT);
                     try {
@@ -158,8 +215,8 @@ public class WebGateway {
                     
                     authClient.send(new JSONObject()
                         .put("type", "AUTH_LOGIN")
-                        .put("username", json.getString("username"))
-                        .put("password", json.getString("password")));
+                        .put("username", username)
+                        .put("password", password));
                     
                     JSONObject authRes = authClient.receive();
                     
@@ -169,8 +226,10 @@ public class WebGateway {
                         int userId = authRes.getInt("userId");
                         String role = authRes.getString("role");
                         
-                        NetworkClient sessionClient;
+                        // Reset failed login counter
+                        SecurityMonitor.resetFailedLogins(username);
                         
+                        NetworkClient sessionClient;
                         
                         if ("DRIVER".equalsIgnoreCase(role)) {
                             if (DEBUG) System.out.println("[Gateway] Switching User " + userId + " to DriverService (Port " + DRIVER_PORT + ")");
@@ -200,13 +259,18 @@ public class WebGateway {
                         res.put("sessionId", sessionId);
                         res.put("role", role); 
                         res.put("userId", userId); 
-
                         
                         if (authRes.has("email")) res.put("email", authRes.getString("email"));
                         if (authRes.has("vehicle_model")) res.put("vehicle_model", authRes.getString("vehicle_model"));
                         if (authRes.has("license_plate")) res.put("license_plate", authRes.getString("license_plate"));
                         if (authRes.has("rating")) res.put("rating", authRes.getDouble("rating")); 
                     } else {
+                        // Record failed login
+                        try (NetworkClient countClient = new NetworkClient("localhost", DISPATCH_PORT)) {
+                            countClient.connect();
+                            SecurityMonitor.recordFailedLogin(username, countClient);
+                        } catch (Exception ignored) {}
+
                         res.put("success", false);
                         String msg = authRes.optString("message", "Login failed");
                         if (msg == null || msg.isBlank()) msg = "Login failed";
