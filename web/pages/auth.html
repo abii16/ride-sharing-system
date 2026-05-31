@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gateway Portal - RideShare</title>
+    <title>Unified Login Gateway - RideShare</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/auth.css">
+    <style>
+        /* Modern overrides for unified login view */
+        .active-login .role-tabs {
+            display: none !important;
+        }
+        .active-login #portalHeading {
+            font-size: 2.2rem;
+        }
+    </style>
 </head>
-<body class="active-passenger">
+<body class="active-passenger active-login">
 
     <nav>
         <a href="../index.html" class="logo">
-            <div style="background:var(--primary); width:8px; height:8px; border-radius:50%; margin-right:8px; transition: background-color 0.3s;" id="logoDot"></div>
+            <div style="background:var(--primary); width:8px; height:8px; border-radius:50%; margin-right:8px;" id="logoDot"></div>
             RideShare<span>.</span>
         </a>
     </nav>
@@ -20,15 +29,14 @@
         <div class="auth-card">
             
             <div class="auth-header">
-                <h2 id="portalHeading">Passenger Access</h2>
+                <h2 id="portalHeading">Sign In</h2>
                 <p id="portalSubheading">Welcome back! Please enter your credentials to log in.</p>
             </div>
 
-            <!-- Role Tabs -->
-            <div class="role-tabs">
+            <!-- Role Tabs (Only visible when signing up) -->
+            <div class="role-tabs" id="authRoleTabs" style="display: none;">
                 <button class="role-tab active" data-role="PASSENGER" onclick="switchRole('PASSENGER')">👤 Passenger</button>
                 <button class="role-tab" data-role="DRIVER" onclick="switchRole('DRIVER')">🚘 Driver</button>
-                <button class="role-tab" data-role="ADMIN" onclick="switchRole('ADMIN')">🛡️ Admin</button>
             </div>
 
             <!-- Mode Selector (Log In / Sign Up) -->
@@ -44,7 +52,7 @@
                     <label for="username">Username</label>
                     <div class="input-wrapper">
                         <span class="icon">👤</span>
-                        <input type="text" id="username" placeholder="Username" required>
+                        <input type="text" id="username" placeholder="Enter your username" required>
                     </div>
                 </div>
 
@@ -83,7 +91,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit" id="btnSubmit" data-role="PASSENGER">LOG IN</button>
+                <button type="submit" class="btn-submit" id="btnSubmit">LOG IN</button>
             </form>
 
             <!-- Alert Box -->

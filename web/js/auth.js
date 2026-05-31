@@ -1,4 +1,4 @@
-let currentRole = 'PASSENGER';
+let currentRole = 'PASSENGER'; // Only meaningful during registration
 let currentMode = 'LOGIN';
 
 // Parse query params on load to automatically pre-select
@@ -8,15 +8,19 @@ window.addEventListener('DOMContentLoaded', () => {
     
     if (roleParam) {
         const r = roleParam.toUpperCase();
-        if (r === 'DRIVER') switchRole('DRIVER');
-        else if (r === 'ADMIN') switchRole('ADMIN');
-        else switchRole('PASSENGER');
-    } else {
-        switchRole('PASSENGER');
+        if (r === 'DRIVER') {
+            currentRole = 'DRIVER';
+        } else if (r === 'ADMIN') {
+            currentRole = 'ADMIN';
+        }
     }
+    
+    switchMode('LOGIN');
 });
 
 function switchRole(role) {
+    if (currentMode === 'LOGIN') return; // Roles not switched manually during login
+    
     currentRole = role;
     
     // Update active tab buttons
@@ -25,40 +29,24 @@ function switchRole(role) {
         else tab.classList.remove('active');
     });
 
-    // Update body class for custom color transitions
+    // Update body classes & logo dot colors for visual consistency
     document.body.className = '';
     if (role === 'PASSENGER') {
         document.body.classList.add('active-passenger');
         document.getElementById('logoDot').style.backgroundColor = 'var(--primary)';
-        document.getElementById('portalHeading').innerText = "Passenger Access";
-        document.getElementById('passLabel').innerText = "Password";
-        document.getElementById('password').placeholder = "Enter your password";
-        document.getElementById('modeContainer').style.display = 'flex';
-        switchMode(currentMode);
+        document.getElementById('portalHeading').innerText = "Create Account";
+        document.getElementById('portalSubheading').innerText = "Create an account to start booking quick rides instantly.";
+        document.getElementById('emailGroup').style.display = 'none';
+        document.getElementById('driverFields').classList.remove('visible');
     } else if (role === 'DRIVER') {
         document.body.classList.add('active-driver');
         document.getElementById('logoDot').style.backgroundColor = 'var(--secondary)';
-        document.getElementById('portalHeading').innerText = "Driver Portal";
-        document.getElementById('passLabel').innerText = "Password";
-        document.getElementById('password').placeholder = "Enter your password";
-        document.getElementById('modeContainer').style.display = 'flex';
-        switchMode(currentMode);
-    } else if (role === 'ADMIN') {
-        document.body.classList.add('active-admin');
-        document.getElementById('logoDot').style.backgroundColor = 'var(--admin)';
-        document.getElementById('portalHeading').innerText = "Admin Console";
-        document.getElementById('passLabel').innerText = "Secure Key";
-        document.getElementById('password').placeholder = "Enter authorization key";
-        document.getElementById('modeContainer').style.display = 'none'; // Admin has no register
-        switchMode('LOGIN');
+        document.getElementById('portalHeading').innerText = "Driver Application";
+        document.getElementById('portalSubheading').innerText = "Submit your application to join our premium fleet of drivers.";
+        document.getElementById('emailGroup').style.display = 'flex';
+        document.getElementById('driverFields').classList.add('visible');
     }
 
-    // Set submit button attribute
-    const btn = document.getElementById('btnSubmit');
-    btn.dataset.role = role;
-    btn.className = 'btn-submit';
-    
-    // Clear alerts
     hideAlert();
 }
 
@@ -71,31 +59,53 @@ function switchMode(mode) {
     const driverFields = document.getElementById('driverFields');
     const btnSubmit = document.getElementById('btnSubmit');
     const subText = document.getElementById('portalSubheading');
+    const heading = document.getElementById('portalHeading');
+    const roleTabs = document.getElementById('authRoleTabs');
+
+    document.body.className = '';
 
     if (mode === 'LOGIN') {
+        document.body.classList.add('active-passenger', 'active-login');
+        document.getElementById('logoDot').style.backgroundColor = 'var(--primary)';
+        
         modeLogin.classList.add('active');
         modeSignup.classList.remove('active');
+        
+        roleTabs.style.display = 'none';
         emailGroup.style.display = 'none';
         driverFields.classList.remove('visible');
-        btnSubmit.innerText = 'LOG IN';
         
-        if (currentRole === 'PASSENGER') subText.innerText = "Welcome back! Please enter your credentials to log in.";
-        else if (currentRole === 'DRIVER') subText.innerText = "Access your driving console and locate ride dispatches.";
-        else subText.innerText = "Secure administrative terminal. Unauthorized access is monitored.";
+        heading.innerText = 'Sign In';
+        btnSubmit.innerText = 'LOG IN';
+        btnSubmit.style.background = 'var(--primary)';
+        btnSubmit.style.boxShadow = '0 4px 15px var(--primary-glow)';
+        
+        // Context-aware subtitle on login
+        if (currentRole === 'ADMIN') {
+            subText.innerText = "Secure administrative terminal. Enter credentials to log in.";
+        } else if (currentRole === 'DRIVER') {
+            subText.innerText = "Access your driving console and locate ride dispatches.";
+        } else {
+            subText.innerText = "Welcome back! Enter your credentials to access the RideShare network.";
+        }
         
     } else {
+        // SIGN UP MODE
         modeLogin.classList.remove('active');
         modeSignup.classList.add('active');
+        
+        roleTabs.style.display = 'flex';
         btnSubmit.innerText = 'SIGN UP';
         
-        if (currentRole === 'PASSENGER') {
-            emailGroup.style.display = 'none';
-            driverFields.classList.remove('visible');
-            subText.innerText = "Create an account to start booking quick rides instantly.";
-        } else if (currentRole === 'DRIVER') {
-            emailGroup.style.display = 'flex';
-            driverFields.classList.add('visible');
-            subText.innerText = "Submit your application to join our premium fleet of drivers.";
+        // Default sign up is Passenger unless driver was requested
+        if (currentRole === 'DRIVER') {
+            switchRole('DRIVER');
+            btnSubmit.style.background = 'var(--secondary)';
+            btnSubmit.style.boxShadow = '0 4px 15px var(--secondary-glow)';
+        } else {
+            switchRole('PASSENGER');
+            btnSubmit.style.background = 'var(--primary)';
+            btnSubmit.style.boxShadow = '0 4px 15px var(--primary-glow)';
         }
     }
     
@@ -118,7 +128,7 @@ async function handleSubmit() {
 
     try {
         if (currentMode === 'LOGIN') {
-            // LOGIN FLOW
+            // UNIFIED LOGIN - Automatic Role Detection
             const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -127,28 +137,17 @@ async function handleSubmit() {
             const data = await res.json();
             
             if (data.success) {
-                // Check authorization role alignment
-                if (currentRole === 'ADMIN' && data.role !== 'ADMIN') {
-                    throw new Error("Access Denied: Account is not an administrator.");
-                }
-                if (currentRole === 'DRIVER' && data.role !== 'DRIVER') {
-                    throw new Error("Access Denied: Account is not a registered driver.");
-                }
-                if (currentRole === 'PASSENGER' && data.role !== 'PASSENGER') {
-                    throw new Error("Access Denied: Account is not a passenger.");
-                }
-
-                showAlert("Authentication successful! Redirecting...", "success");
+                showAlert(`Authenticated! Logging into ${data.role} portal...`, "success");
                 
-                // Store sessions specifically matching existing formats
+                // Store sessions matching role returned from the database
                 const timestamp = Date.now();
-                if (currentRole === 'PASSENGER') {
-                    localStorage.setItem('passenger_sessionId', data.sessionId);
-                    localStorage.setItem('passenger_userId', data.userId);
-                    localStorage.setItem('passenger_username', user);
-                    localStorage.setItem('passenger_lastActivity', timestamp);
-                    setTimeout(() => window.location.href = 'passenger.html', 1000);
-                } else if (currentRole === 'DRIVER') {
+                const role = data.role ? data.role.toUpperCase() : 'PASSENGER';
+
+                if (role === 'ADMIN') {
+                    localStorage.setItem('admin_sessionId', data.sessionId);
+                    localStorage.setItem('admin_lastActivity', timestamp);
+                    setTimeout(() => window.location.href = 'admin.html', 1000);
+                } else if (role === 'DRIVER') {
                     localStorage.setItem('driver_sessionId', data.sessionId);
                     localStorage.setItem('driver_username', user);
                     localStorage.setItem('driver_email', data.email || 'No Email');
@@ -158,16 +157,18 @@ async function handleSubmit() {
                     localStorage.setItem('driver_uid', data.userId);
                     localStorage.setItem('driver_lastActivity', timestamp);
                     setTimeout(() => window.location.href = 'driver.html', 1000);
-                } else if (currentRole === 'ADMIN') {
-                    localStorage.setItem('admin_sessionId', data.sessionId);
-                    localStorage.setItem('admin_lastActivity', timestamp);
-                    setTimeout(() => window.location.href = 'admin.html', 1000);
+                } else {
+                    localStorage.setItem('passenger_sessionId', data.sessionId);
+                    localStorage.setItem('passenger_userId', data.userId);
+                    localStorage.setItem('passenger_username', user);
+                    localStorage.setItem('passenger_lastActivity', timestamp);
+                    setTimeout(() => window.location.href = 'passenger.html', 1000);
                 }
             } else {
                 throw new Error(data.message || "Invalid username or password credentials.");
             }
         } else {
-            // REGISTRATION FLOW
+            // REGISTRATION FLOW (Passenger vs Driver selected by tab)
             let payload = {
                 username: user,
                 password: pass,
