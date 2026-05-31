@@ -57,13 +57,4 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 );
 
 
-INSERT IGNORE INTO users (username, password_hash, role) VALUES ('admin', '0e77b69e96f95ff21b20ee721a778b7f:1852a3597e420a91bd1ac4615a0509cd39f05ae221e2d8601f9573d8e665804e', 'ADMIN');
-INSERT IGNORE INTO users (username, password_hash, role) VALUES ('abel', '2038d3dc33d9b013e37f79f35d5566cf:e0405a8e269af50514f8ce71178d7470d215c59f61b641715d5e876108063eba', 'DRIVER');
-INSERT IGNORE INTO users (username, password_hash, role) VALUES ('yoni', '64899eb54700fdbe6eb69e49ea660727:0ce6f97754f445de16d4eaab8065752f47031909cd54b50652fb298d0d2e8db5', 'PASSENGER');
-
-INSERT INTO drivers (user_id, vehicle_model, license_plate, status)
-VALUES (2, 'Toyota Prius', 'AES256:JOXmbhNmmNXzN0xuSu/+Qw==', 'APPROVED')
-ON DUPLICATE KEY UPDATE
-    vehicle_model = VALUES(vehicle_model),
-    license_plate = VALUES(license_plate),
-    status = 'APPROVED';
+INSERT IGNORE INTO users (username, password_hash, role) VALUES ('admin', '2066fca618539b4f3981a5c56553564e:f9d2ca66c08fbf563a9ed34abd557266dcd74f5a2cf838392e09acac1cb5ef98', 'ADMIN');

@@ -92,7 +92,7 @@ Ensure MySQL is running (e.g., in XAMPP) and run `start_all.bat`. It compiles al
 1. Open your browser and navigate to: [http://localhost:8080/pages/admin.html](http://localhost:8080/pages/admin.html)
 2. Log in using the default admin credentials:
    * **Username**: `admin`
-   * **Secure Key**: `admin123`
+   * **Secure Key**: `Admin123!`
 
 ### Step 3: Open the Security Center Tab
 1. Click on the **🛡️ Security Center** menu item on the left sidebar (glowing green).

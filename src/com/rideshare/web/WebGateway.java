@@ -121,7 +121,7 @@ public class WebGateway {
 
                     // SQL Injection Shield
                     if (SecurityMonitor.hasSQLInjection(username) || SecurityMonitor.hasSQLInjection(email) || 
-                        SecurityMonitor.hasSQLInjection(password) || SecurityMonitor.hasSQLInjection(role) ||
+                        SecurityMonitor.hasSQLInjection(role) ||
                         SecurityMonitor.hasSQLInjection(model) || SecurityMonitor.hasSQLInjection(plate)) {
                         
                         try (NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT)) {
@@ -136,7 +136,7 @@ public class WebGateway {
 
                     // XSS Scripting Shield
                     if (SecurityMonitor.hasXSS(username) || SecurityMonitor.hasXSS(email) || 
-                        SecurityMonitor.hasXSS(password) || SecurityMonitor.hasXSS(model) || 
+                        SecurityMonitor.hasXSS(model) || 
                         SecurityMonitor.hasXSS(plate)) {
                         
                         try (NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT)) {
@@ -222,7 +222,7 @@ public class WebGateway {
                     String password = json.getString("password");
 
                     // SQL Injection Shield
-                    if (SecurityMonitor.hasSQLInjection(username) || SecurityMonitor.hasSQLInjection(password)) {
+                    if (SecurityMonitor.hasSQLInjection(username)) {
                         try (NetworkClient authClient = new NetworkClient("localhost", DISPATCH_PORT)) {
                             authClient.connect();
                             SecurityMonitor.logSecurityEvent(authClient, "SQL_INJECTION_BLOCKED", 

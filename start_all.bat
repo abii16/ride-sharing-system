@@ -55,38 +55,22 @@ exit /b 1
 
 
 echo Starting Database Service (Port 7000)...
+start /B "Database Service" java -cp "lib/json.jar;lib/mysql-connector.jar;src" com.rideshare.database.DatabaseService
 
-
-start "Database Service" cmd /k java -cp "lib/json.jar;lib/mysql-connector.jar;src" com.rideshare.database.DatabaseService
-
-
-timeout /t 5 >nul
-
-
-
+timeout /t 3 >nul
 
 echo Starting Driver Service (Port 6000)...
-
-
-start "Driver Service" cmd /k java -cp "lib/json.jar;src" com.rideshare.driver.DriverService
-
+start /B "Driver Service" java -cp "lib/json.jar;src" com.rideshare.driver.DriverService
 
 timeout /t 2 >nul
-
-
-
 
 echo Starting Dispatch Server (Port 5000)...
-
-
-start "Dispatch Server" cmd /k java -cp "lib/json.jar;src" com.rideshare.dispatch.DispatchServer
-
+start /B "Dispatch Server" java -cp "lib/json.jar;src" com.rideshare.dispatch.DispatchServer
 
 timeout /t 2 >nul
 
-
 echo Starting Web Gateway (Port 8080)...
-start "Web Gateway" cmd /k java -cp "lib/json.jar;src" com.rideshare.web.WebGateway
+start /B "Web Gateway" java -cp "lib/json.jar;src" com.rideshare.web.WebGateway
 
 echo.
 echo ====================================================

@@ -477,29 +477,35 @@ public class DispatchServer {
             } else if (type.equals("ADMIN_APPROVE_DRIVER")) {
                 int driverId = doc.getInt("driverId");
                 boolean approved = doc.getBoolean("approved");
-                String newStatus = approved ? "APPROVED" : "REJECTED";
                 
-                System.out.println("[Admin] Setting driver " + driverId + " status to " + newStatus);
-                
-                String sql = "UPDATE drivers SET status = '" + newStatus + "' WHERE user_id = " + driverId;
-                
-                dbClient.send(new JSONObject()
-                    .put("type", "DB_UPDATE")
-                    .put("sql", sql));
-                JSONObject updateRes = dbClient.receive(); 
-                
-                
-                int rows = 0;
-                if (updateRes.has("rowsAffected")) {
-                    Object ra = updateRes.get("rowsAffected");
-                    if (ra instanceof Number) rows = ((Number)ra).intValue();
-                }
+                if (approved) {
+                    System.out.println("[Admin] Setting driver " + driverId + " status to APPROVED");
+                    String sql = "UPDATE drivers SET status = 'APPROVED' WHERE user_id = " + driverId;
+                    
+                    dbClient.send(new JSONObject()
+                        .put("type", "DB_UPDATE")
+                        .put("sql", sql));
+                    JSONObject updateRes = dbClient.receive(); 
+                    
+                    int rows = 0;
+                    if (updateRes.has("rowsAffected")) {
+                        Object ra = updateRes.get("rowsAffected");
+                        if (ra instanceof Number) rows = ((Number)ra).intValue();
+                    }
 
-                if (rows == 0) {
-                     System.out.println("[Admin] Driver record missing for " + driverId + ". Creating default record.");
-                     String insertSql = String.format("INSERT INTO drivers (user_id, vehicle_model, license_plate, status) VALUES (%d, 'Unknown', 'Unknown', '%s')", driverId, newStatus);
-                     dbClient.send(new JSONObject().put("type", "DB_UPDATE").put("sql", insertSql));
-                     dbClient.receive();
+                    if (rows == 0) {
+                         System.out.println("[Admin] Driver record missing for " + driverId + ". Creating default APPROVED record.");
+                         String insertSql = String.format("INSERT INTO drivers (user_id, vehicle_model, license_plate, status) VALUES (%d, 'Unknown', 'Unknown', 'APPROVED')", driverId);
+                         dbClient.send(new JSONObject().put("type", "DB_UPDATE").put("sql", insertSql));
+                         dbClient.receive();
+                    }
+                } else {
+                    System.out.println("[Admin] Rejecting and DELETING driver user " + driverId);
+                    // Cascade delete: deleting from users will automatically drop the driver profile via DB constraint
+                    dbClient.send(new JSONObject()
+                        .put("type", "DB_UPDATE")
+                        .put("sql", "DELETE FROM users WHERE id = " + driverId));
+                    dbClient.receive();
                 }
                 
                 out.println(new JSONObject().put("success", true).toString());

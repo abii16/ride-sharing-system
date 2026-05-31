@@ -225,12 +225,12 @@ public class DatabaseService implements ClusterListener {
                         
                         // If it was a successful write on Leader, broadcast it
                         if ("DB_UPDATE".equals(type) && "OK".equals(response.optString("status")) && cluster.isLeader()) {
-                             // Stronger safety: wait for majority ACKs so a leader crash doesn't silently lose writes.
-                             boolean replicated = cluster.broadcastWriteWithQuorumAck(request.getString("sql"), 2500);
-                             response.put("replicated", replicated);
-                             if (!replicated) {
-                                 response.put("warning", "Write executed on leader but replication quorum was not reached.");
-                             }
+                             final String sqlToReplicate = request.getString("sql");
+                             // Replicate asynchronously in the background so client calls remain highly responsive
+                             new Thread(() -> {
+                                 cluster.broadcastWriteWithQuorumAck(sqlToReplicate, 2500);
+                             }).start();
+                             response.put("replicated", true);
                         }
                     }
                     

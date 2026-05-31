@@ -21,14 +21,14 @@ function switchRole(role) {
     document.body.className = '';
     if (role === 'PASSENGER') {
         document.body.classList.add('active-passenger');
-        document.getElementById('logoDot').style.backgroundColor = 'var(--primary)';
+        document.querySelectorAll('.logo-dot').forEach(el => el.style.backgroundColor = 'var(--primary)');
         document.getElementById('portalHeading').innerText = "Create Account";
         document.getElementById('portalSubheading').innerText = "Create an account to start booking quick rides instantly.";
         document.getElementById('emailGroup').style.display = 'none';
         document.getElementById('driverFields').classList.remove('visible');
     } else if (role === 'DRIVER') {
         document.body.classList.add('active-driver');
-        document.getElementById('logoDot').style.backgroundColor = 'var(--secondary)';
+        document.querySelectorAll('.logo-dot').forEach(el => el.style.backgroundColor = 'var(--secondary)');
         document.getElementById('portalHeading').innerText = "Driver Application";
         document.getElementById('portalSubheading').innerText = "Submit your application to join our premium fleet of drivers.";
         document.getElementById('emailGroup').style.display = 'flex';
@@ -54,7 +54,7 @@ function switchMode(mode) {
 
     if (mode === 'LOGIN') {
         document.body.classList.add('active-passenger', 'active-login');
-        document.getElementById('logoDot').style.backgroundColor = 'var(--primary)';
+        document.querySelectorAll('.logo-dot').forEach(el => el.style.backgroundColor = 'var(--primary)');
         
         modeLogin.classList.add('active');
         modeSignup.classList.remove('active');
@@ -152,7 +152,7 @@ async function handleSubmit() {
                 if (role === 'ADMIN') {
                     localStorage.setItem('admin_sessionId', data.sessionId);
                     localStorage.setItem('admin_lastActivity', timestamp);
-                    setTimeout(() => window.location.href = 'admin.html', 1000);
+                    setTimeout(() => window.location.href = 'admin.html', 100);
                 } else if (role === 'DRIVER') {
                     localStorage.setItem('driver_sessionId', data.sessionId);
                     localStorage.setItem('driver_username', user);
@@ -162,13 +162,13 @@ async function handleSubmit() {
                     localStorage.setItem('driver_rating', data.rating || '5.0');
                     localStorage.setItem('driver_uid', data.userId);
                     localStorage.setItem('driver_lastActivity', timestamp);
-                    setTimeout(() => window.location.href = 'driver.html', 1000);
+                    setTimeout(() => window.location.href = 'driver.html', 100);
                 } else {
                     localStorage.setItem('passenger_sessionId', data.sessionId);
                     localStorage.setItem('passenger_userId', data.userId);
                     localStorage.setItem('passenger_username', user);
                     localStorage.setItem('passenger_lastActivity', timestamp);
-                    setTimeout(() => window.location.href = 'passenger.html', 1000);
+                    setTimeout(() => window.location.href = 'passenger.html', 100);
                 }
             } else {
                 throw new Error(data.message || "Invalid username or password credentials.");
@@ -208,13 +208,13 @@ async function handleSubmit() {
                     setTimeout(() => {
                         switchMode('LOGIN');
                         document.getElementById('password').value = "";
-                    }, 3000);
+                    }, 300);
                 } else {
                     showAlert("Registration successful! You can now log in.", "success");
                     setTimeout(() => {
                         switchMode('LOGIN');
                         document.getElementById('password').value = "";
-                    }, 1500);
+                    }, 300);
                 }
             } else {
                 throw new Error(data.message || "Registration failed. Try a different username.");
