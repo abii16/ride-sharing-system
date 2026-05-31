@@ -11,36 +11,26 @@
 
     <nav>
         <a href="index.html" class="logo">
-            <div style="background:var(--secondary); width:8px; height:8px; border-radius:50%; margin-right:5px"></div>
-            RideShare <span>.</span>
+            <div style="background:var(--primary); width:8px; height:8px; border-radius:50%; margin-right:5px"></div>
+            RideShare<span>.</span>
         </a>
-        <div class="nav-items">
-            
-            <a href="pages/auth.html?role=admin">System Admin</a>
-        </div>
     </nav>
 
     <div class="hero">
         <div class="content">
             <h1>Go Anywhere.</h1>
-            <br>
-            <br>
+            <p class="subtitle" style="margin-bottom: 30px;">A secure, real-time distributed mobility network.</p>
             
-            <div class="cards-container">
-                
-                <a href="pages/auth.html?role=passenger" class="option-card" style="--color-glow: #4e8cff; --color-bg-icon: rgba(78, 140, 255, 0.2);">
-                    <div class="card-icon">👋</div>
-                    <div class="card-title">I'm a Passenger</div>
-
-                    <div class="arrow-btn">Book Ride &rarr;</div>
-                </a>
-
-                
-                <a href="pages/auth.html?role=driver" class="option-card" style="--color-glow: #00ca72; --color-bg-icon: rgba(0, 202, 114, 0.2);">
-                    <div class="card-icon">🚘</div>
-                    <div class="card-title">I'm a Driver</div>
-
-                    <div class="arrow-btn">Start Driving &rarr;</div>
+            <div class="cards-container" style="justify-content: center;">
+                <a href="pages/auth.html" class="option-card" style="width: 360px; --color-glow: #4e8cff; --color-bg-icon: rgba(78, 140, 255, 0.2); padding: 3rem; text-align: center;">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Gateway Portal</div>
+                    <div class="card-desc" style="margin-top: 10px; color: var(--text-main); opacity: 0.7;">
+                        Access passenger dispatches, driver controls, and administrative auditing tools in one secure network.
+                    </div>
+                    <div class="arrow-btn" style="opacity: 1; transform: none; margin-top: 30px; background: var(--primary); color: white; padding: 12px 30px; border-radius: 10px; box-shadow: 0 4px 15px var(--primary-glow); display: inline-block;">
+                        Enter Portal &rarr;
+                    </div>
                 </a>
             </div>
         </div>
