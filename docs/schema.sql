@@ -24,7 +24,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS rating DOUBLE DEFAULT 5.0;
 CREATE TABLE IF NOT EXISTS drivers (
     user_id INT PRIMARY KEY,
     vehicle_model VARCHAR(50),
-    license_plate VARCHAR(20) UNIQUE,
+    license_plate VARCHAR(100) UNIQUE,
     status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
     is_online BOOLEAN DEFAULT FALSE,
     last_lat DOUBLE,
