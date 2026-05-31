@@ -3,6 +3,7 @@ package com.rideshare.client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 public class PingDemo {
@@ -10,7 +11,7 @@ public class PingDemo {
         String baseUrl = args.length > 0 ? args[0] : "http://localhost:8080";
         String path = args.length > 1 ? args[1] : "/api/ping-dispatch";
 
-        URL url = new URL(baseUrl + path);
+        URL url = URI.create(baseUrl + path).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setConnectTimeout(3000);
