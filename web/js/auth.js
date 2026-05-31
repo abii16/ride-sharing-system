@@ -10,8 +10,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const r = roleParam.toUpperCase();
         if (r === 'DRIVER') {
             currentRole = 'DRIVER';
-        } else if (r === 'ADMIN') {
-            currentRole = 'ADMIN';
         }
     }
     
@@ -82,9 +80,7 @@ function switchMode(mode) {
         btnSubmit.style.boxShadow = '0 4px 15px var(--primary-glow)';
         
         // Context-aware subtitle on login
-        if (currentRole === 'ADMIN') {
-            subText.innerText = "Secure administrative terminal. Enter credentials to log in.";
-        } else if (currentRole === 'DRIVER') {
+        if (currentRole === 'DRIVER') {
             subText.innerText = "Access your driving console and locate ride dispatches.";
         } else {
             subText.innerText = "Welcome back! Enter your credentials to access the RideShare network.";

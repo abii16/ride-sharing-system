@@ -32,7 +32,7 @@
                 if (Date.now() - last > INACTIVITY_TIMEOUT) {
                     localStorage.removeItem('admin_sessionId');
                     sessionId = null;
-                    window.location.href = 'auth.html?role=ADMIN';
+                    window.location.href = 'auth.html';
                     return;
                 }
                 
@@ -43,7 +43,7 @@
                 startPolling();
                 setupInactivityMonitor();
             } else {
-                window.location.href = 'auth.html?role=ADMIN';
+                window.location.href = 'auth.html';
             }
         });
 
