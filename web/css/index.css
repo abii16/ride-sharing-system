@@ -1,6 +1,6 @@
 :root {
-    --primary: #4e8cff;
-    --primary-glow: rgba(78, 140, 255, 0.4);
+    --primary: #00ca72;
+    --primary-glow: rgba(0, 202, 114, 0.4);
     --secondary: #ffce00;
     --bg: #0a0a0a;
     --surface: #121214;
@@ -19,7 +19,7 @@ body {
     display: flex;
     flex-direction: column;
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(78, 140, 255, 0.06), transparent 40%),
+        radial-gradient(circle at 10% 20%, rgba(0, 202, 114, 0.06), transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06), transparent 40%);
 }
 
