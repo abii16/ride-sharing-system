@@ -44,3 +44,14 @@
             msg.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
             msg.style.display = 'block';
         }
+
+        window.togglePasswordVisibility = function(inputId, toggleEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleEl.innerText = '🙈';
+            } else {
+                input.type = 'password';
+                toggleEl.innerText = '👁️';
+            }
+        };

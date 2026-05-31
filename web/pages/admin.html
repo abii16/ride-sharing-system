@@ -14,7 +14,10 @@
         <div class="login-box">
             <h2>🛡️ Admin Portal</h2>
             <input type="text" id="username" placeholder="Admin Username">
-            <input type="password" id="password" placeholder="Secure Key">
+            <div class="password-container" style="position: relative; width: 100%; margin-bottom: 15px;">
+                <input type="password" id="password" placeholder="Secure Key" style="margin-bottom: 0; padding-right: 45px;">
+                <span class="toggle-password" onclick="togglePasswordVisibility('password', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 1.2rem; z-index: 10;">👁️</span>
+            </div>
             <button class="btn-red" onclick="login()">Access Control System</button>
         </div>
     </div>

@@ -28,7 +28,10 @@
             
             <div id="loginForm">
                 <input type="text" class="input-box" id="username" placeholder="Username">
-                <input type="password" class="input-box" id="password" placeholder="Password">
+                <div style="position: relative; width: 100%; margin-bottom: 15px;">
+                    <input type="password" class="input-box" id="password" placeholder="Password" style="margin-bottom: 0; padding-right: 45px;">
+                    <span class="toggle-password" onclick="togglePasswordVisibility('password', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 1.1rem; z-index: 10;">👁️</span>
+                </div>
                 <button class="btn-blue" onclick="login()">Log In</button>
                 <p style="margin-top:1rem;font-size:0.9rem"><a href="driver_register.html">Register as new driver</a></p>
             </div>

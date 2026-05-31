@@ -380,3 +380,14 @@
             }, 3000);
             return false;
         }
+
+        window.togglePasswordVisibility = function(inputId, toggleEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleEl.innerText = '🙈';
+            } else {
+                input.type = 'password';
+                toggleEl.innerText = '👁️';
+            }
+        };

@@ -33,7 +33,10 @@
                 
                 <div class="input-group">
                     <label class="label">Password</label>
-                    <input type="password" id="password" placeholder="Create a password" required>
+                    <div style="position: relative; width: 100%;">
+                        <input type="password" id="password" placeholder="Create a password" required style="padding-right: 45px; width: 100%; box-sizing: border-box;">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('password', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 1.1rem; z-index: 10;">👁️</span>
+                    </div>
                 </div>
 
                 <div class="driver-fields">
