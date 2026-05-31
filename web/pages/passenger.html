@@ -24,24 +24,10 @@
     </nav>
 
     
-    <div id="loginConfig" class="modal-overlay">
-        <div class="modal-box">
-            <h2 id="authTitle">Welcome Back</h2>
-            <div class="input-wrapper">
-                <span class="input-icon">👤</span>
-                <input type="text" id="username" placeholder="Username">
-            </div>
-            <div class="input-wrapper" style="position: relative;">
-                <span class="input-icon">🔒</span>
-                <input type="password" id="password" placeholder="Password" style="padding-right: 45px;">
-                <span class="toggle-password" onclick="togglePasswordVisibility('password', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 1.1rem; z-index: 10;">👁️</span>
-            </div>
-            <button class="btn-primary" onclick="handleAuth()" id="authBtn">Log In</button>
-            <p style="margin-top:1rem; font-size:0.9rem; color:#666">
-                
-                <a href="passenger_register.html" style="color:var(--primary); text-decoration:none">Create an account</a>
-            </p>
-        </div>
+    <!-- Unified Auth Gateway handles credentials; keeping hidden placeholders for legacy DOM queries -->
+    <div id="loginConfig" style="display: none;">
+        <input type="hidden" id="username">
+        <input type="hidden" id="password">
     </div>
 
     
