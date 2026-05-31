@@ -37,7 +37,7 @@
                     localStorage.removeItem('driver_rating');
                     localStorage.removeItem('driver_uid');
                     sessionId = null;
-                    window.location.href = 'auth.html?role=DRIVER';
+                    window.location.href = 'auth.html';
                     return;
                 }
                 
@@ -66,7 +66,7 @@
                 startPolling();
                 setupInactivityMonitor();
             } else {
-                window.location.href = 'auth.html?role=DRIVER';
+                window.location.href = 'auth.html';
             }
         });
         let map;

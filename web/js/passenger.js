@@ -36,7 +36,7 @@
                     localStorage.removeItem('passenger_username');
                     sessionId = null;
                     userId = null;
-                    window.location.href = 'auth.html?role=PASSENGER';
+                    window.location.href = 'auth.html';
                     return;
                 }
                 
@@ -46,7 +46,7 @@
                 startPolling();
                 setupInactivityMonitor();
             } else {
-                window.location.href = 'auth.html?role=PASSENGER';
+                window.location.href = 'auth.html';
             }
         });
         let isRegisterMode = false;

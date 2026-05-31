@@ -1,18 +1,8 @@
 let currentRole = 'PASSENGER'; // Only meaningful during registration
 let currentMode = 'LOGIN';
 
-// Parse query params on load to automatically pre-select
+// Unified auth portal initialization
 window.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const roleParam = params.get('role');
-    
-    if (roleParam) {
-        const r = roleParam.toUpperCase();
-        if (r === 'DRIVER') {
-            currentRole = 'DRIVER';
-        }
-    }
-    
     switchMode('LOGIN');
 });
 
