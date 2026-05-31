@@ -1,7 +1,46 @@
         let sessionId = localStorage.getItem('driver_sessionId');
 
+        const INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
+        let inactivityInterval = null;
+
+        function resetActivityTimer() {
+            localStorage.setItem('driver_lastActivity', Date.now());
+        }
+
+        function checkInactivity() {
+            if (!sessionId) return;
+            const last = parseInt(localStorage.getItem('driver_lastActivity') || Date.now());
+            if (Date.now() - last > INACTIVITY_TIMEOUT) {
+                alert("Session expired due to 10 minutes of inactivity.");
+                logout();
+            }
+        }
+
+        function setupInactivityMonitor() {
+            ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+                document.addEventListener(evt, resetActivityTimer, true);
+            });
+            resetActivityTimer();
+            if (inactivityInterval) clearInterval(inactivityInterval);
+            inactivityInterval = setInterval(checkInactivity, 5000);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionId) {
+                const last = parseInt(localStorage.getItem('driver_lastActivity') || Date.now());
+                if (Date.now() - last > INACTIVITY_TIMEOUT) {
+                    localStorage.removeItem('driver_sessionId');
+                    localStorage.removeItem('driver_username');
+                    localStorage.removeItem('driver_email');
+                    localStorage.removeItem('driver_model');
+                    localStorage.removeItem('driver_plate');
+                    localStorage.removeItem('driver_rating');
+                    localStorage.removeItem('driver_uid');
+                    sessionId = null;
+                    location.reload();
+                    return;
+                }
+                
                 const user = localStorage.getItem('driver_username');
                 const email = localStorage.getItem('driver_email');
                 const model = localStorage.getItem('driver_model');
@@ -25,6 +64,7 @@
                 setTimeout(initMap, 100);
                 startGPS();
                 startPolling();
+                setupInactivityMonitor();
             }
         });
         let map;
@@ -53,6 +93,7 @@
             localStorage.removeItem('driver_plate');
             localStorage.removeItem('driver_rating');
             localStorage.removeItem('driver_uid');
+            localStorage.removeItem('driver_lastActivity');
             location.reload();
         }
 
@@ -83,6 +124,7 @@
                     localStorage.setItem('driver_plate', data.license_plate || 'N/A');
                     localStorage.setItem('driver_rating', data.rating || '5.0');
                     localStorage.setItem('driver_uid', data.userId);
+                    resetActivityTimer();
 
                     document.getElementById('loginModal').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'grid';
@@ -100,6 +142,7 @@
                     setTimeout(initMap, 100);
                     startGPS();
                     startPolling();
+                    setupInactivityMonitor();
                 } else {
                     document.getElementById('msgBox').innerText = data.message || "Login Failed";
                 }

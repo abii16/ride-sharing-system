@@ -2,12 +2,49 @@
         let userId = localStorage.getItem('passenger_userId');
         let username = localStorage.getItem('passenger_username');
 
+        const INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
+        let inactivityInterval = null;
+
+        function resetActivityTimer() {
+            localStorage.setItem('passenger_lastActivity', Date.now());
+        }
+
+        function checkInactivity() {
+            if (!sessionId) return;
+            const last = parseInt(localStorage.getItem('passenger_lastActivity') || Date.now());
+            if (Date.now() - last > INACTIVITY_TIMEOUT) {
+                alert("Session expired due to 10 minutes of inactivity.");
+                logout();
+            }
+        }
+
+        function setupInactivityMonitor() {
+            ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+                document.addEventListener(evt, resetActivityTimer, true);
+            });
+            resetActivityTimer();
+            if (inactivityInterval) clearInterval(inactivityInterval);
+            inactivityInterval = setInterval(checkInactivity, 5000);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionId && userId) {
+                const last = parseInt(localStorage.getItem('passenger_lastActivity') || Date.now());
+                if (Date.now() - last > INACTIVITY_TIMEOUT) {
+                    localStorage.removeItem('passenger_sessionId');
+                    localStorage.removeItem('passenger_userId');
+                    localStorage.removeItem('passenger_username');
+                    sessionId = null;
+                    userId = null;
+                    location.reload();
+                    return;
+                }
+                
                 document.getElementById('loginConfig').style.display = 'none';
                 document.getElementById('appInterface').classList.remove('hidden');
                 document.getElementById('userDisplay').innerText = username || "Passenger";
                 startPolling();
+                setupInactivityMonitor();
             }
         });
         let isRegisterMode = false;
@@ -55,6 +92,7 @@
             localStorage.removeItem('passenger_sessionId');
             localStorage.removeItem('passenger_userId');
             localStorage.removeItem('passenger_username');
+            localStorage.removeItem('passenger_lastActivity');
             location.reload();
         }
 
@@ -101,10 +139,12 @@
                     localStorage.setItem('passenger_sessionId', sessionId);
                     localStorage.setItem('passenger_userId', userId);
                     localStorage.setItem('passenger_username', user);
+                    resetActivityTimer();
                     document.getElementById('loginConfig').style.display = 'none';
                     document.getElementById('appInterface').classList.remove('hidden');
                     document.getElementById('userDisplay').innerText = user;
                     startPolling();
+                    setupInactivityMonitor();
                 } else {
                     alert(data.message || data.error || "Login Failed");
                 }

@@ -1,18 +1,53 @@
         let sessionId = localStorage.getItem('admin_sessionId');
         let latestSecurityData = null;
 
+        const INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
+        let inactivityInterval = null;
+
+        function resetActivityTimer() {
+            localStorage.setItem('admin_lastActivity', Date.now());
+        }
+
+        function checkInactivity() {
+            if (!sessionId) return;
+            const last = parseInt(localStorage.getItem('admin_lastActivity') || Date.now());
+            if (Date.now() - last > INACTIVITY_TIMEOUT) {
+                alert("Session expired due to 10 minutes of inactivity.");
+                logout();
+            }
+        }
+
+        function setupInactivityMonitor() {
+            ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+                document.addEventListener(evt, resetActivityTimer, true);
+            });
+            resetActivityTimer();
+            if (inactivityInterval) clearInterval(inactivityInterval);
+            inactivityInterval = setInterval(checkInactivity, 5000);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionId) {
+                const last = parseInt(localStorage.getItem('admin_lastActivity') || Date.now());
+                if (Date.now() - last > INACTIVITY_TIMEOUT) {
+                    localStorage.removeItem('admin_sessionId');
+                    sessionId = null;
+                    location.reload();
+                    return;
+                }
+                
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('app').style.display = 'flex';
                 log("Admin Session Restored.");
                 refreshData();
                 startPolling();
+                setupInactivityMonitor();
             }
         });
 
         function logout() {
             localStorage.removeItem('admin_sessionId');
+            localStorage.removeItem('admin_lastActivity');
             location.reload();
         }
 
@@ -29,11 +64,13 @@
                 if (data.success && data.role === 'ADMIN') {
                     sessionId = data.sessionId;
                     localStorage.setItem('admin_sessionId', sessionId);
+                    resetActivityTimer();
                     document.getElementById('authScreen').style.display = 'none';
                     document.getElementById('app').style.display = 'flex';
                     log("Admin Session Established.");
                     refreshData();
                     startPolling();
+                    setupInactivityMonitor();
                 } else alert("Access Denied: " + data.message);
             } catch (e) { alert("Error: " + e.message); }
         }
