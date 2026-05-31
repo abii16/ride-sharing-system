@@ -1,4 +1,32 @@
-        let sessionId = null;
+        let sessionId = localStorage.getItem('driver_sessionId');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionId) {
+                const user = localStorage.getItem('driver_username');
+                const email = localStorage.getItem('driver_email');
+                const model = localStorage.getItem('driver_model');
+                const plate = localStorage.getItem('driver_plate');
+                const rating = localStorage.getItem('driver_rating');
+                const uid = localStorage.getItem('driver_uid');
+
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'grid';
+                document.getElementById('navUser').style.display = 'flex';
+                document.getElementById('dashName').innerText = user || 'Driver';
+                document.getElementById('dashEmail').innerText = email || 'No Email';
+                document.getElementById('dashModel').innerText = model || 'N/A';
+                document.getElementById('dashPlate').innerText = plate || 'N/A';
+                document.getElementById('dashRating').innerText = '★ ' + (rating || '5.0');
+                document.getElementById('dashName').dataset.uid = uid;
+                
+                document.getElementById('onlineToggle').checked = true;
+                toggleOnline();
+                
+                setTimeout(initMap, 100);
+                startGPS();
+                startPolling();
+            }
+        });
         let map;
         let driverMarker;
         
@@ -18,6 +46,13 @@
         }
 
         function logout() {
+            localStorage.removeItem('driver_sessionId');
+            localStorage.removeItem('driver_username');
+            localStorage.removeItem('driver_email');
+            localStorage.removeItem('driver_model');
+            localStorage.removeItem('driver_plate');
+            localStorage.removeItem('driver_rating');
+            localStorage.removeItem('driver_uid');
             location.reload();
         }
 
@@ -41,6 +76,14 @@
                     }
 
                     sessionId = data.sessionId; 
+                    localStorage.setItem('driver_sessionId', sessionId);
+                    localStorage.setItem('driver_username', user);
+                    localStorage.setItem('driver_email', data.email || 'No Email');
+                    localStorage.setItem('driver_model', data.vehicle_model || 'N/A');
+                    localStorage.setItem('driver_plate', data.license_plate || 'N/A');
+                    localStorage.setItem('driver_rating', data.rating || '5.0');
+                    localStorage.setItem('driver_uid', data.userId);
+
                     document.getElementById('loginModal').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'grid';
                     document.getElementById('navUser').style.display = 'flex';

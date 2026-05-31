@@ -1,5 +1,15 @@
-        let sessionId = null;
-        let userId = null;
+        let sessionId = localStorage.getItem('passenger_sessionId');
+        let userId = localStorage.getItem('passenger_userId');
+        let username = localStorage.getItem('passenger_username');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionId && userId) {
+                document.getElementById('loginConfig').style.display = 'none';
+                document.getElementById('appInterface').classList.remove('hidden');
+                document.getElementById('userDisplay').innerText = username || "Passenger";
+                startPolling();
+            }
+        });
         let isRegisterMode = false;
         let selectedRideType = 'STANDARD';
         let map;
@@ -42,6 +52,9 @@
 
         
         function logout() {
+            localStorage.removeItem('passenger_sessionId');
+            localStorage.removeItem('passenger_userId');
+            localStorage.removeItem('passenger_username');
             location.reload();
         }
 
@@ -85,6 +98,9 @@
                 if(data.success) {
                     sessionId = data.sessionId;
                     userId = data.userId;
+                    localStorage.setItem('passenger_sessionId', sessionId);
+                    localStorage.setItem('passenger_userId', userId);
+                    localStorage.setItem('passenger_username', user);
                     document.getElementById('loginConfig').style.display = 'none';
                     document.getElementById('appInterface').classList.remove('hidden');
                     document.getElementById('userDisplay').innerText = user;

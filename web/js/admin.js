@@ -1,7 +1,18 @@
-        let sessionId = null;
+        let sessionId = localStorage.getItem('admin_sessionId');
         let latestSecurityData = null;
 
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionId) {
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                log("Admin Session Restored.");
+                refreshData();
+                startPolling();
+            }
+        });
+
         function logout() {
+            localStorage.removeItem('admin_sessionId');
             location.reload();
         }
 
@@ -17,6 +28,7 @@
                 
                 if (data.success && data.role === 'ADMIN') {
                     sessionId = data.sessionId;
+                    localStorage.setItem('admin_sessionId', sessionId);
                     document.getElementById('authScreen').style.display = 'none';
                     document.getElementById('app').style.display = 'flex';
                     log("Admin Session Established.");
