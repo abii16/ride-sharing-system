@@ -2,3 +2,7 @@
 *.tmp
 *.bak
 *.DS_Store
+.project
+.classpath
+.settings/
+bin/
