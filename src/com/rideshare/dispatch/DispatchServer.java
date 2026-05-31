@@ -310,9 +310,9 @@ public class DispatchServer {
                                 JSONArray arr = dInfo.optJSONArray("data");
                                 if(arr != null && arr.length() > 0) {
                                     JSONObject r = arr.getJSONObject(0);
-                                    if(r.has("username")) dName = r.getString("username");
-                                    if(r.has("vehicle_model")) dCar = r.getString("vehicle_model");
-                                    if(r.has("license_plate")) dPlate = r.getString("license_plate");
+                                    dName = r.optString("username", dName);
+                                    dCar = r.optString("vehicle_model", dCar);
+                                    dPlate = r.optString("license_plate", dPlate);
                                 }
                             }
 
@@ -419,11 +419,17 @@ public class DispatchServer {
                 // Decrypt emails and license plates for the Admin view
                 for (int i = 0; i < users.length(); i++) {
                     JSONObject u = users.getJSONObject(i);
-                    if (u.has("license_plate")) {
-                        u.put("license_plate", CryptoUtil.decryptAES(u.getString("license_plate")));
+                    String plateVal = u.optString("license_plate", "");
+                    if (!plateVal.isEmpty() && !"null".equalsIgnoreCase(plateVal)) {
+                        u.put("license_plate", CryptoUtil.decryptAES(plateVal));
+                    } else {
+                        u.put("license_plate", "N/A");
                     }
-                    if (u.has("email")) {
-                        u.put("email", CryptoUtil.decryptAES(u.getString("email")));
+                    String emailVal = u.optString("email", "");
+                    if (!emailVal.isEmpty() && !"null".equalsIgnoreCase(emailVal)) {
+                        u.put("email", CryptoUtil.decryptAES(emailVal));
+                    } else {
+                        u.put("email", "N/A");
                     }
                 }
 
