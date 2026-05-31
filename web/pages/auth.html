@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gateway Portal - RideShare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body class="active-passenger">
+
+    <nav>
+        <a href="../index.html" class="logo">
+            <div style="background:var(--primary); width:8px; height:8px; border-radius:50%; margin-right:8px; transition: background-color 0.3s;" id="logoDot"></div>
+            RideShare<span>.</span>
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="auth-card">
+            
+            <div class="auth-header">
+                <h2 id="portalHeading">Passenger Access</h2>
+                <p id="portalSubheading">Welcome back! Please enter your credentials to log in.</p>
+            </div>
+
+            <!-- Role Tabs -->
+            <div class="role-tabs">
+                <button class="role-tab active" data-role="PASSENGER" onclick="switchRole('PASSENGER')">👤 Passenger</button>
+                <button class="role-tab" data-role="DRIVER" onclick="switchRole('DRIVER')">🚘 Driver</button>
+                <button class="role-tab" data-role="ADMIN" onclick="switchRole('ADMIN')">🛡️ Admin</button>
+            </div>
+
+            <!-- Mode Selector (Log In / Sign Up) -->
+            <div class="mode-toggle" id="modeContainer">
+                <span class="mode-link active" id="modeLogin" onclick="switchMode('LOGIN')">LOG IN</span>
+                <span class="mode-link" id="modeSignup" onclick="switchMode('SIGNUP')">SIGN UP</span>
+            </div>
+
+            <!-- Form -->
+            <form id="authForm" onsubmit="event.preventDefault(); handleSubmit();">
+                
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <span class="icon">👤</span>
+                        <input type="text" id="username" placeholder="Username" required>
+                    </div>
+                </div>
+
+                <div class="input-group" id="emailGroup" style="display: none;">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="icon">✉️</span>
+                        <input type="email" id="email" placeholder="name@example.com">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password" id="passLabel">Password</label>
+                    <div class="input-wrapper">
+                        <span class="icon">🔒</span>
+                        <input type="password" id="password" placeholder="Enter your password" required style="padding-right: 45px;">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</span>
+                    </div>
+                </div>
+
+                <!-- Driver Only Registration Fields -->
+                <div class="driver-only-fields" id="driverFields">
+                    <div class="input-group">
+                        <label for="model">Vehicle Model</label>
+                        <div class="input-wrapper">
+                            <span class="icon">🚗</span>
+                            <input type="text" id="model" placeholder="e.g. Toyota Corolla">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="plate">License Plate</label>
+                        <div class="input-wrapper">
+                            <span class="icon">🔢</span>
+                            <input type="text" id="plate" placeholder="e.g. AA-12345">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit" data-role="PASSENGER">LOG IN</button>
+            </form>
+
+            <!-- Alert Box -->
+            <div id="alertBox" class="alert-box"></div>
+
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Distributed RideSharing System | Built with &#10084; by softwares
+    </footer>
+
+    <script src="../js/auth.js"></script>
+</body>
+</html>

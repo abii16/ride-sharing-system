@@ -36,7 +36,7 @@
                     localStorage.removeItem('passenger_username');
                     sessionId = null;
                     userId = null;
-                    location.reload();
+                    window.location.href = 'auth.html?role=PASSENGER';
                     return;
                 }
                 
@@ -45,6 +45,8 @@
                 document.getElementById('userDisplay').innerText = username || "Passenger";
                 startPolling();
                 setupInactivityMonitor();
+            } else {
+                window.location.href = 'auth.html?role=PASSENGER';
             }
         });
         let isRegisterMode = false;

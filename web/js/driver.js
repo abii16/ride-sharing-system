@@ -37,7 +37,7 @@
                     localStorage.removeItem('driver_rating');
                     localStorage.removeItem('driver_uid');
                     sessionId = null;
-                    location.reload();
+                    window.location.href = 'auth.html?role=DRIVER';
                     return;
                 }
                 
@@ -65,6 +65,8 @@
                 startGPS();
                 startPolling();
                 setupInactivityMonitor();
+            } else {
+                window.location.href = 'auth.html?role=DRIVER';
             }
         });
         let map;
