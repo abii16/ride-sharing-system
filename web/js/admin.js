@@ -376,7 +376,7 @@
             
             const users = data.users;
             document.getElementById('countUsers').innerText = users.filter(u => u.role === 'PASSENGER').length;
-            document.getElementById('countDrivers').innerText = users.filter(u => u.role === 'DRIVER').length;
+            document.getElementById('countDrivers').innerText = users.filter(u => u.role === 'DRIVER' && u.status === 'APPROVED').length;
 
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = "";
