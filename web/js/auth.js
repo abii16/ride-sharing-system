@@ -74,6 +74,7 @@ function switchMode(mode) {
         roleTabs.style.display = 'none';
         emailGroup.style.display = 'none';
         driverFields.classList.remove('visible');
+        document.getElementById('passHelp').style.display = 'none';
         
         heading.innerText = 'Sign In';
         btnSubmit.innerText = 'LOG IN';
@@ -96,6 +97,7 @@ function switchMode(mode) {
         
         roleTabs.style.display = 'flex';
         btnSubmit.innerText = 'SIGN UP';
+        document.getElementById('passHelp').style.display = 'block';
         
         // Default sign up is Passenger unless driver was requested
         if (currentRole === 'DRIVER') {
@@ -127,6 +129,24 @@ async function handleSubmit() {
     hideAlert();
 
     try {
+        if (currentMode === 'SIGNUP') {
+            if (pass.length < 6) {
+                throw new Error("Password must be at least 6 characters long.");
+            }
+            if (!/[A-Z]/.test(pass)) {
+                throw new Error("Password must include at least one uppercase letter.");
+            }
+            if (!/[a-z]/.test(pass)) {
+                throw new Error("Password must include at least one lowercase letter.");
+            }
+            if (!/[0-9]/.test(pass)) {
+                throw new Error("Password must include at least one number.");
+            }
+            if (!/[!@#$%^&*()_+\-=\[\]{};':\",\./<>?\\|`~]/.test(pass)) {
+                throw new Error("Password must include at least one special character (e.g. !@#$%).");
+            }
+        }
+
         if (currentMode === 'LOGIN') {
             // UNIFIED LOGIN - Automatic Role Detection
             const res = await fetch('/api/login', {

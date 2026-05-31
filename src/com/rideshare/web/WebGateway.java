@@ -97,6 +97,28 @@ public class WebGateway {
                     String model = json.optString("vehicle_model", "");
                     String plate = json.optString("license_plate", "");
 
+                    // Strong Password Policy Validation (Backend)
+                    if (password == null || password.length() < 6) {
+                        sendError(t, 400, "Password must be at least 6 characters long.");
+                        return;
+                    }
+                    boolean hasUpper = false;
+                    boolean hasLower = false;
+                    boolean hasDigit = false;
+                    boolean hasSpecial = false;
+                    String specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?`~";
+                    for (int i = 0; i < password.length(); i++) {
+                        char c = password.charAt(i);
+                        if (Character.isUpperCase(c)) hasUpper = true;
+                        else if (Character.isLowerCase(c)) hasLower = true;
+                        else if (Character.isDigit(c)) hasDigit = true;
+                        else if (specialChars.indexOf(c) >= 0) hasSpecial = true;
+                    }
+                    if (!hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+                        sendError(t, 400, "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                        return;
+                    }
+
                     // SQL Injection Shield
                     if (SecurityMonitor.hasSQLInjection(username) || SecurityMonitor.hasSQLInjection(email) || 
                         SecurityMonitor.hasSQLInjection(password) || SecurityMonitor.hasSQLInjection(role) ||
