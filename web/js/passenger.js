@@ -43,6 +43,7 @@
                 document.getElementById('loginConfig').style.display = 'none';
                 document.getElementById('appInterface').classList.remove('hidden');
                 document.getElementById('userDisplay').innerText = username || "Passenger";
+                document.body.style.display = ''; // Reveal authenticated content
                 startPolling();
                 setupInactivityMonitor();
             } else {

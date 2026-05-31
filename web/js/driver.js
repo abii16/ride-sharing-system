@@ -61,6 +61,7 @@
                 document.getElementById('onlineToggle').checked = true;
                 toggleOnline();
                 
+                document.body.style.display = ''; // Reveal authenticated content
                 setTimeout(initMap, 100);
                 startGPS();
                 startPolling();

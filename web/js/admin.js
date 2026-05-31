@@ -38,6 +38,7 @@
                 
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('app').style.display = 'flex';
+                document.body.style.display = ''; // Reveal authenticated content
                 log("Admin Session Restored.");
                 refreshData();
                 startPolling();
